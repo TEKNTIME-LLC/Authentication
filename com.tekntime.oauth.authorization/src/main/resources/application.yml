@@ -1,0 +1,14 @@
+server:
+  port: 9000
+
+security:
+  jwt:
+    key-store: classpath:keystore.jks
+    key-store-password: changeit
+    key-pair-alias: server-alias
+    key-pair-password: changeit
+
+spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true

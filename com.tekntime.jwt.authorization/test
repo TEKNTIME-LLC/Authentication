@@ -1,0 +1,23 @@
+See this URL 
+https://www.javainuse.com/spring/boot-jwt
+
+Use RESTClient
+
+http://localhost:9090/ttauth/authenticate
+
+POST
+
+context type : application/json
+
+
+{
+"username": "tekntime",
+"password": "password"
+}
+
+
+To connect Mongo database use TekntimeUserDetailsService.java
+by setting in WebConfig file.
+
+User definition is also there in H2 database. Code is there in oauth module.
+

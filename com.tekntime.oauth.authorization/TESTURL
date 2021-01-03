@@ -1,0 +1,19 @@
+Check this URL: https://blog.marcosbarbero.com/centralized-authorization-jwt-spring-boot2/
+
+install database: 
+create schema
+create certificates
+
+clientid is the username
+secret is the password 
+
+C:\projects\Java\jdk1.8.0_221\bin>curl -u clientId:secret -X POST localhost:9000/oauth/token -d grant_type=password -d username=user -d password=pass
+
+
+Data and scemal sql are renamed.
+
+Public keys is required for resource
+command is
+keytool -list -rfc --keystore keystore.jks | openssl x509 -inform pem -pubkey -noout
+
+this required pubkey. download openssl
