@@ -1,18 +1,22 @@
 package com.tekntime.oauth.server.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
-import java.util.HashMap;
-import java.util.Map;
-
-class DefaultPasswordEncoderFactories {
+@Configuration
+class PasswordEncoderConfig {
 
     @SuppressWarnings("deprecation")
-    static PasswordEncoder createDelegatingPasswordEncoder() {
+    @Bean
+    PasswordEncoder createDelegatingPasswordEncoder() {
         String encodingId = "bcrypt";
         Map<String, PasswordEncoder> encoders = new HashMap<>();
         encoders.put(encodingId, new BCryptPasswordEncoder());

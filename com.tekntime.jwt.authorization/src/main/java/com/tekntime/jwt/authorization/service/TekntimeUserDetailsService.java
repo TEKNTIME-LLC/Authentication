@@ -11,14 +11,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.tekntime.jwt.authorization.repository.UserDaoImpl;
+import com.tekntime.jwt.authorization.repository.UserMongoRepository;
 
 @Service
 public class TekntimeUserDetailsService implements UserDetailsService{
 	private static final Logger logger   = LoggerFactory.getLogger(TekntimeUserDetailsService.class);	
 	
 	@Autowired
-	private UserDaoImpl userdao;
+	private UserMongoRepository userdao;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

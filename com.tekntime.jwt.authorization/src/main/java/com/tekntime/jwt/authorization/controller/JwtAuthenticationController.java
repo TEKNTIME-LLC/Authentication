@@ -1,7 +1,5 @@
 package com.tekntime.jwt.authorization.controller;
 
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +27,23 @@ import com.tekntime.jwt.authorization.util.JwtTokenUtil;
 public class JwtAuthenticationController {
 	private static final Logger logger   = LoggerFactory.getLogger(JwtAuthenticationController.class);	
 
-@Autowired
-private AuthenticationManager authenticationManager;
-
-@Autowired
-private JwtTokenUtil jwtTokenUtil;
-
-@Autowired
-//private TekntimeUserDetailsService userDetailsService;
-private JwtUserDetailsService userDetailsService;
-
-@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-	authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-	final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-	final String token = jwtTokenUtil.generateToken(userDetails);
-	return ResponseEntity.ok(new JwtResponse(token));
-}
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	//private TekntimeUserDetailsService userDetailsService;
+	private JwtUserDetailsService userDetailsService;
+	
+	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final String token = jwtTokenUtil.generateToken(userDetails);
+		return ResponseEntity.ok(new JwtResponse(token));
+	}
 
 	private void authenticate(String username, String password) throws Exception {
 		try {

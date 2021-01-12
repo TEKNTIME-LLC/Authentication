@@ -16,9 +16,9 @@ import com.tekntime.jwt.authorization.model.TekntimeUser;
 
 
 @Repository
-public class UserDaoImpl {
+public class UserMongoRepository {
 
-	private static final Logger logger   = LoggerFactory.getLogger(UserDaoImpl.class);	
+	private static final Logger logger   = LoggerFactory.getLogger(UserMongoRepository.class);	
 	@Autowired
     private MongoTemplate mongoTemplate;
 	

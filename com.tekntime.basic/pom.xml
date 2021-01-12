@@ -10,6 +10,7 @@
 	
 	<groupId>com.tekntime.basic</groupId>
 	<artifactId>com.tekntime.basic</artifactId>
+	<packaging>war</packaging>
 	<name>Basic authentication</name>
 	<description>Basic authentication across the database</description>
 
@@ -18,6 +19,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>

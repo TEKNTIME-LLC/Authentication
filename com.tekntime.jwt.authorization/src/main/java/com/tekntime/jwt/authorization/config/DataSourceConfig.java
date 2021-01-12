@@ -1,4 +1,4 @@
-package com.tekntime.oauth.server.config;
+package com.tekntime.jwt.authorization.config;
 
 import javax.sql.DataSource;
 
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 public class DataSourceConfig {
@@ -27,4 +28,5 @@ public class DataSourceConfig {
         dataSourceBuilder.password(DBPASSWORD);
         return dataSourceBuilder.build();
     }
+	
 }
