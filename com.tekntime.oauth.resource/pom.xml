@@ -3,27 +3,34 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <groupId>org.com.tekntime.oauth.resource</groupId>
-        <artifactId>spring-boot2-oauth2-jwt</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>..</relativePath>
-    </parent>
+  <parent>
+    <groupId>com.tekntime.authorization.app</groupId>
+    <artifactId>com.tekntime.authorization.app</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>oauth2-jwt-resource</artifactId>
-    <description>
-        <![CDATA[
-            Playground project for OAuth2 + JWT using Spring Security
-        ]]>
-    </description>
+    <artifactId>com.tekntime.oauth.resource</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+            <version>2.1.2.RELEASE</version>
         </dependency>
     </dependencies>
 
