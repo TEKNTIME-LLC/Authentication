@@ -3,26 +3,7 @@
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <title th:text="#{label.pages.home.title}">Title</title>
-<script th:inline="javascript">
-	function validate() {
-        if (document.f.username.value == "" && document.f.password.value == "") {
-            alert(/*[[#{message.username} + #{message.password}]]*/);
-            document.f.username.focus();
-            return false;
-        }
-        if (document.f.username.value == "") {
-            alert(/*[[#{message.username}]]*/);
-            document.f.username.focus();
-            return false;
-        }
-        if (document.f.password.value == "") {
-            alert(/*[[#{message.password}]]*/);
-            document.f.password.focus();
-            return false;
-        }
-    }
-    
-</script>
+<script type="text/javascript" src="js/login.js" />
 <style type="text/css">
 .wrapper{width:500px;margin-left:auto;margin-right:auto}
 label{padding-left:0 !important}
