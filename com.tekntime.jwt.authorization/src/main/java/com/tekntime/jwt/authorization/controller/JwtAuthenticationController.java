@@ -37,7 +37,7 @@ public class JwtAuthenticationController {
 	//private TekntimeUserDetailsService userDetailsService;
 	private JwtUserDetailsService userDetailsService;
 	
-	@GetMapping("/app")
+	@RequestMapping(value = "/app", method = RequestMethod.GET)
     public String getApp() {
 		logger.info("reached JWT login app" );
         return "JWT";
