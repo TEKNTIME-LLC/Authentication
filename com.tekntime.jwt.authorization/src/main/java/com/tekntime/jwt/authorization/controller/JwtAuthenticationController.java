@@ -37,6 +37,12 @@ public class JwtAuthenticationController {
 	//private TekntimeUserDetailsService userDetailsService;
 	private JwtUserDetailsService userDetailsService;
 	
+	@GetMapping("/app")
+    public String getApp() {
+		logger.info("reached JWT login app" );
+        return "JWT";
+    }
+	
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());

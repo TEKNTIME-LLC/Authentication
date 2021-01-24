@@ -1,4 +1,4 @@
-package org.com.tekntime.oauth.resource.web;
+package org.com.tekntime.oauth.resource.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/me")
+@RequestMapping("/user")
 public class UserController {
 
     @GetMapping
