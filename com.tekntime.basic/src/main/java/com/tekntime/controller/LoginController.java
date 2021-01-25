@@ -27,44 +27,6 @@ public class LoginController {
 	@Autowired
 	private UserLoginService service;
 	
-	@GetMapping("/app")
-    public Map<String, String> getApp(HttpServletRequest request) {
-		logger.info("reached basic-auth app" );
-		Map<String, String> map = new HashMap<String, String>();
-		if(! BASICAUTHHOSTNAME.equalsIgnoreCase(request.getHeader("host"))) {
-			map.put("app", "BASIC-AUTH is NOT accessible");
-			return map;
-	    }
-		
-		map.put("scheme", request.getScheme());
-		map.put("server", request.getServerName());
-		map.put("method", request.getMethod());
-		map.put("contextpath", request.getContextPath());
-		map.put("protocol", request.getProtocol());
-		map.put("port", ""+request.getServerPort());
-		map.put("LocalName", request.getLocalName());
-		map.put("requestURI", request.getRequestURI());
-		map.put("queryString", request.getQueryString());
-		map.put("cookies", Arrays.toString(request.getCookies()));
-		
-		Enumeration<String> params = request.getParameterNames(); 
-		while(params.hasMoreElements()){
-		 String paramName = params.nextElement();
-		 map.put("Parameter Name - "+paramName, "Value - "+request.getParameter(paramName));
-		}
-		
-        Enumeration headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
-            String value = request.getHeader(key);
-            map.put(key, value);
-        }
-        map.put("app", "BASIC-AUTH");
-       
-        return map;
-    }
-
-	
 	@RequestMapping( path="/read", method=RequestMethod.GET)
 	public UserLogin read( @RequestParam String loginName) {
 		logger.info("trying to login with {}", loginName);
