@@ -146,24 +146,7 @@ public class EmailNotificationService {
         multipart.addBodyPart(messageBodyPart);        
     }
  
- public Map<String,String> send (EmailNotification emailNotification) {
-	 Map<String,String> result=new HashMap();
-	 if (emailNotification.getToList()==null || emailNotification.getToList().isEmpty()) {
-     	result.put("Recipient address is empty", "400");
-     	
-     }	
-	 if (emailNotification.getSubject()==null || emailNotification.getSubject().isEmpty()) {
-     	result.put("Subject field is empty", "400");
-     }
-	 if (!result.isEmpty()) {
-			return result;
-		}
-	 
-	 //notify(emailNotification);
-	 result.put("Successfully sent message", "200");
-	 logger.info("Email was sent successfully");
-	 return result;
- }
+
         
  public Map<String,String> emailNotify (EmailNotification emailNotification) {
 	 Map<String,String> result=new HashMap();

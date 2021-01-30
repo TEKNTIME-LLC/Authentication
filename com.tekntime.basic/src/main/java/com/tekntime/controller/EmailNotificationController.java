@@ -36,7 +36,7 @@ public class EmailNotificationController {
 		emailNotification.setFrom(from);
 		emailNotification.setToList(Arrays.asList(receivers));
 		emailNotification.setSubject(subject);
-		service.send(emailNotification);
+		service.emailNotify(emailNotification);
 	}
 	
 }
