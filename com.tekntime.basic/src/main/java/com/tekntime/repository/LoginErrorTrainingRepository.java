@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.tekntime.model.LoginErrorTraining;
 
-public interface JsonTrainingRepository extends CrudRepository <LoginErrorTraining, String>{
+public interface LoginErrorTrainingRepository extends CrudRepository <LoginErrorTraining, String>{
 	LoginErrorTraining findByErrorCode(String errorCode);
 }

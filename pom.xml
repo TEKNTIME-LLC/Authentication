@@ -31,6 +31,7 @@
     <module>com.tekntime.oauth.resource</module>
     <module>com.tekntime.mfa</module>
     <module>com.tekntime.proxy</module>
+    <module>com.tekntime.basic.proxy</module>
   </modules>
   
   <dependencies>

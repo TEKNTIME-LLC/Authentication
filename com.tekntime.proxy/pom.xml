@@ -4,18 +4,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tekntime.proxy</groupId>
-    <artifactId>com.tekntime.proxy</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <artifactId>tekproxy</artifactId>
+    <packaging>war</packaging>
 	<name>proxy service</name>
 	<description>This service uses spring gateway</description>
 
 
-	  <parent>
+	 <parent>
 	    <groupId>com.tekntime.authorization.app</groupId>
 	    <artifactId>com.tekntime.authorization.app</artifactId>
 	    <version>0.0.1-SNAPSHOT</version>
-	  </parent>
+	 </parent>
+	  
+	<properties>
+        <java.version>1.8</java.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -55,9 +58,7 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
+
 
     <build>
         <plugins>
