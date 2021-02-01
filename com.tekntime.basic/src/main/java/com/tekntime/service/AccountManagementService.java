@@ -51,13 +51,16 @@ public Map<String,String> passwordReset (UserLogin user) {
 		//pass generated password 
 		userReset.setPassword(tempPassword2);
 	
-	
-	//Do I need a logic to call the EmailNotification here to send newly generated password to customer? YES			
+		userReset.setActive(true);
+		userReset.setDeleted(false);
+		userReset.setLocked(false);	
+		setExpiryDate( userReset);		
 	
 		EmailNotification passwordNotify = new EmailNotification();
 	
 		passwordNotify.setBodyMessage("Your temporary password is: " + tempPassword2 + " You are required to change this password immediately after login");
 		passwordNotify.setSubject("PASSWORD RESET");
+		passwordNotify.setFrom("odewenwabraille@gmail.com");
 		ArrayList<String> to = new ArrayList<String>(); //passwordNotify.setToList(Arrays.toString(userReset.getEmail())); create instance of ArrayList and add email to it
 		to.add(userReset.getEmail());
 		passwordNotify.setToList(to);
@@ -68,33 +71,9 @@ public Map<String,String> passwordReset (UserLogin user) {
 	return result;
 }
 	
-public Map<String,String> accountUnlock(UserLogin user) {
-		Map<String,String> result=new HashMap<>();
-		UserLogin userReset = repository.findByLoginName(user.getLoginName());	
-		if (userReset.getLoginName()== null) {
-			result.put("Incorrect loginName or loginName does not exists", "500");
-			return result;
-		}
-		userReset.setLocked(false);	
-		repository.save(userReset);
-		result.put("Account successfully unlocked", "200");
-		return result;
-}
 
-public Map<String,String> undeleteAccount(UserLogin user) {
-	Map<String,String> result=new HashMap<>();
-	UserLogin userReset = repository.findByLoginName(user.getLoginName());	
-	if (userReset.getLoginName()== null) {
-		result.put("Incorrect loginName or loginName does not exists", "500");
-		return result;
-	}
-	userReset.setDeleted(false);
-	repository.save(userReset);
-	result.put("Account successfully undeleted", "200");
-	return result;
-}
 
-public Map<String,String> activateAccount(UserLogin user) {
+public Map<String,String> updateAccount(UserLogin user) {
 	Map<String,String> result=new HashMap<>();
 	UserLogin userReset = repository.findByLoginName(user.getLoginName());	
 	if (userReset.getLoginName()== null) {
@@ -102,24 +81,11 @@ public Map<String,String> activateAccount(UserLogin user) {
 		return result;
 	}
 	userReset.setActive(true);
+	userReset.setDeleted(false);
+	userReset.setLocked(false);	
+	setExpiryDate( userReset);
 	repository.save(userReset);
-	result.put("Account successfully activated", "200");
-	return result;
-}
-
-public Map<String,String> setexpiryDate(UserLogin user) {
-	Map<String,String> result=new HashMap<>();
-	UserLogin userReset = repository.findByLoginName(user.getLoginName());	
-	if (userReset.getLoginName()== null) {
-		result.put("Incorrect loginName or loginName does not exists", "500");
-		return result;
-	}
-	Calendar admindate = Calendar.getInstance();
-	admindate.add(Calendar.DATE, 90);
-	Date admndate = admindate.getTime();		
-	userReset.setExpiryDate(admndate);
-	repository.save(userReset);
-	result.put("Expiry date successfully update to 90 days", "200");
+	result.put("Account is successfully updated", "200");
 	return result;
 }
 
@@ -144,12 +110,17 @@ private static char[] generatePassword(int length) {
     return password;
  }
 
-
+private void setExpiryDate(UserLogin userReset) {
+	Calendar admindate = Calendar.getInstance();
+	admindate.add(Calendar.DATE, 90);
+	Date admndate = admindate.getTime();		
+	userReset.setExpiryDate(admndate);
+	
+}
 		
 		
 
 }
 
 
-//unexpired date (loginname)
-//set expiry date to 90days (loginname) Done
+

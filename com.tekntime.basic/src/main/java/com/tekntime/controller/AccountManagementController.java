@@ -29,7 +29,7 @@ public class AccountManagementController {
 	public Map<String, String> unlock( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.accountUnlock(user);
+		Map<String,String> result =service.updateAccount(user);
 		return result;
 	}
 	
@@ -37,7 +37,7 @@ public class AccountManagementController {
 	public Map<String, String> activate( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.activateAccount(user);
+		Map<String,String> result =service.updateAccount(user);
 		return result;
 	}
 	
@@ -45,7 +45,7 @@ public class AccountManagementController {
 	public Map<String, String> undelete( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.undeleteAccount(user);
+		Map<String,String> result =service.updateAccount(user);
 		return result;
 	}
 	
@@ -53,19 +53,10 @@ public class AccountManagementController {
 	public Map<String, String> expiryDate( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.setexpiryDate(user);
+		Map<String,String> result =service.updateAccount(user);
 		return result;
 	}
 	
 
-	
-	
-	
-//forgot password
-//reset password
-//activate login
-//unexpired date
-//unlock account
-//undo account delete
 
 }
