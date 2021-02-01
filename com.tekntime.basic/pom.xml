@@ -9,7 +9,7 @@
 	  </parent>
 	
 	<groupId>com.tekntime.basic</groupId>
-	<artifactId>basic</artifactId>
+	<artifactId>basicdb</artifactId>
 	<packaging>war</packaging>
 	<name>Basic authentication</name>
 	<description>Basic authentication across the database</description>
