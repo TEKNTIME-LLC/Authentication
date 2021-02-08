@@ -7,9 +7,10 @@
     <artifactId>com.tekntime.authorization.app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>com.tekntime.oauth.authorization</artifactId>
-  <name>com.tekntime.oauth.authorization</name>
-  <url>http://maven.apache.org</url>
+  <artifactId>oauth2server</artifactId>
+  <packaging>war</packaging>
+  <name>OAuth server</name>
+  <description>OAuth authentication provider</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -50,6 +51,20 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+<!--         <dependency> -->
+<!--     		<groupId>com.microsoft.sqlserver</groupId> -->
+<!--     		<artifactId>mssql-jdbc</artifactId> -->
+<!--     		<version>8.4.1.jre11</version> -->
+<!--     		<scope>compile</scope> -->
+<!-- 		</dependency> -->
+
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.23</version>
+		</dependency>
+		
 		<dependency>
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-classic</artifactId>

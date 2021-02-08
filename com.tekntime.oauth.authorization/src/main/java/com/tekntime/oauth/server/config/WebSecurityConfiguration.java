@@ -2,6 +2,8 @@ package com.tekntime.oauth.server.config;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,16 +24,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserDetailsService userDetailsService;
+	private static final Logger logger   = LoggerFactory.getLogger(WebSecurityConfiguration.class);	
 
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+    	logger.info("WebSecurityConfiguration initializing with AuthenticationManagerBuilder....");	
         auth.userDetailsService(userDetailsService())
                 .passwordEncoder(passwordEncoder);
     }
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	logger.info("WebSecurityConfiguration initializing with HttpSecurity....");	
+    	
         http
                 .csrf().disable()
                 .anonymous().disable()

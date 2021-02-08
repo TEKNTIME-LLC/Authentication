@@ -2,9 +2,13 @@ package com.tekntime.oauth.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-public class OAuth2ServerApplication {
+@EnableSwagger2
+public class OAuth2ServerApplication extends SpringBootServletInitializer  {
 
     public static void main(String... args) {
         SpringApplication.run(OAuth2ServerApplication.class, args);

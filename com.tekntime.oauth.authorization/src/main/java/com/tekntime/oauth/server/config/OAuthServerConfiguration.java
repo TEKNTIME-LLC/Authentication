@@ -1,9 +1,12 @@
 package com.tekntime.oauth.server.config;
 
+import java.io.IOException;
 import java.security.KeyPair;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +29,9 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @Configuration
 @EnableAuthorizationServer
 @EnableConfigurationProperties(SecurityProperties.class)
-public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapter {
+	private static final Logger logger   = LoggerFactory.getLogger(OAuthServerConfiguration.class);	
+
 
 	@Autowired
 	private  DataSource dataSource;
@@ -38,27 +43,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private  SecurityProperties securityProperties;
 	@Autowired
     private  UserDetailsService userDetailsService;
-	@Autowired
-    private JwtAccessTokenConverter jwtAccessTokenConverter;
-	@Autowired
-    private TokenStore tokenStore;
-
-//    public AuthorizationServerConfiguration(final DataSource dataSource, final PasswordEncoder passwordEncoder,
-//                                            final AuthenticationManager authenticationManager, final SecurityProperties securityProperties,
-//                                            final UserDetailsService userDetailsService) {
-//        this.dataSource = dataSource;
-//        this.passwordEncoder = passwordEncoder;
-//        this.authenticationManager = authenticationManager;
-//        this.securityProperties = securityProperties;
-//        this.userDetailsService = userDetailsService;
-//    }
 
     @Bean
     public TokenStore tokenStore() {
-        if (tokenStore == null) {
-            tokenStore = new JwtTokenStore(jwtAccessTokenConverter());
-        }
-        return tokenStore;
+        	TokenStore tokenStore = new JwtTokenStore(jwtAccessTokenConverter());
+         	return tokenStore;
     }
 
     @Bean
@@ -74,14 +63,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        if (jwtAccessTokenConverter != null) {
-            return jwtAccessTokenConverter;
-        }
-
         SecurityProperties.JwtProperties jwtProperties = securityProperties.getJwt();
+        logger.info("---> KEYSTORE FILENAME: {}" , jwtProperties.getKeyStore().getFilename() ); 
         KeyPair keyPair = keyPair(jwtProperties, keyStoreKeyFactory(jwtProperties));
-
-        jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         jwtAccessTokenConverter.setKeyPair(keyPair);
         return jwtAccessTokenConverter;
     }

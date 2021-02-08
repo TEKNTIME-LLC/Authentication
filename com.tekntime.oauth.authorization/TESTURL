@@ -14,6 +14,9 @@ secret is the password
 C:\projects\Java\jdk1.8.0_221\bin>curl -u clientId:secret -X POST localhost:9000/oauth/token -d grant_type=password -d username=user -d password=pass
 
 
+curl -u clientId:secret -X POST https://oauth.tekmlai.com/oauth2server/oauth/token -d grant_type=password -d username=user -d password=pass
+
+
 Data and scemal sql are renamed to .txt.
 
 
