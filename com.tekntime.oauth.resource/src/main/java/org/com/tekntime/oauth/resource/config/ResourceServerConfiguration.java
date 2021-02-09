@@ -1,6 +1,9 @@
 package org.com.tekntime.oauth.resource.config;
 
 import org.apache.commons.io.IOUtils;
+import org.com.tekntime.oauth.resource.controller.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +25,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @EnableResourceServer
 @EnableConfigurationProperties(SecurityProperties.class)
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+	private static final Logger logger   = LoggerFactory.getLogger(ResourceServerConfiguration.class);	
+
 
     private static final String ROOT_PATTERN = "/**";
 
@@ -74,6 +79,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         try {
             return IOUtils.toString(securityProperties.getJwt().getPublicKey().getInputStream(), UTF_8);
         } catch (IOException e) {
+        	logger.error("Unable to read public key {}" , e);
             throw new RuntimeException(e);
         }
     }
