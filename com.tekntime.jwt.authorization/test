@@ -2,18 +2,22 @@ See this URL
 https://www.javainuse.com/spring/boot-jwt
 
 Use RESTClient
+--------------
 
 http://localhost:9090/ttauth/authenticate
-
 POST
-
 context type : application/json
-
-
 {
 "username": "tekntime",
 "password": "password"
 }
+
+USE CURL
+-------------
+
+
+curl -X POST https://jwt.tekmlai.com/jwt/authenticate/user -H "Content-Type: application/json" -d "{\"username\": \"tekntime\", \"password\":\"password\"}"
+{"token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWtudGltZSIsImV4cCI6MTYxMzMzMjExNCwiaWF0IjoxNjEzMzE0MTE0fQ.l_TuWJ30OxEKj0dunkKqV8y5965pV8jdUSm3sxGQJ9D8hvuCTdrT048lZJpn8SmC8927o2ViNMF2EjTKbQYLFQ"}
 
 
 To connect Mongo database use TekntimeUserDetailsService.java

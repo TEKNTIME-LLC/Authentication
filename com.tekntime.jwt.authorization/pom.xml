@@ -8,11 +8,11 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   
-  <groupId>com.tekntime.jwt.authorization</groupId>
-  <artifactId>com.tekntime.jwt.authorization</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>com.tekntime.jwt.authorization</name>
-  <url>http://maven.apache.org</url>
+   <groupId>com.tekntime.jwt.authorization</groupId>
+   <artifactId>jwt</artifactId>
+   <packaging>war</packaging>
+   <name>JWT token</name>
+   <description>JWT token</description>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,18 +28,37 @@
 		<artifactId>spring-boot-starter-security</artifactId>
 	</dependency>
 	<dependency>
- 		<groupId>org.springframework.boot</groupId>
- 		<artifactId>spring-boot-starter-jdbc</artifactId>
-    </dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-data-jpa</artifactId>
+     </dependency>
 	<dependency>
 		<groupId>io.jsonwebtoken</groupId>
 		<artifactId>jjwt</artifactId>
 		<version>0.9.1</version>
 	</dependency>
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 		<groupId>org.springframework.boot</groupId> -->
+<!-- 		<artifactId>spring-boot-starter-data-mongodb-reactive</artifactId> -->
+<!-- 	</dependency> -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+    		<groupId>com.microsoft.sqlserver</groupId>
+    		<artifactId>mssql-jdbc</artifactId>
+    		<version>8.4.1.jre11</version>
+    		<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.23</version>
+		</dependency>
+		
 	<dependency>
 	    <groupId>ch.qos.logback</groupId>
 	    <artifactId>logback-classic</artifactId>

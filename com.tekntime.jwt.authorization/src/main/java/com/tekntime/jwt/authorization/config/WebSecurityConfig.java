@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tekntime.jwt.authorization.service.JwtUserDetailsService;
+import com.tekntime.jwt.authorization.service.TekntimeUserDetailsService;
 
 @Configuration
 @PropertySource(value = "classpath:application.properties")
@@ -27,8 +28,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+
+	
 	@Autowired
-	private JwtUserDetailsService userDetailsService;
+	private TekntimeUserDetailsService daoUserDetailsService;
 
 
 
@@ -37,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// configure AuthenticationManager so that it knows from where to load
 		// user for matching credentials
 		// Use BCryptPasswordEncoder
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(daoUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 	
 	@Bean
@@ -45,11 +48,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 	
+	@Bean(name="daoAuthenticationManager")
+	public AuthenticationManager authenticationManagerDB() throws Exception {
+		// Validate passwords
+		return super.authenticationManagerBean();
+	}
+	
+	
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
+		// DEFAULT JWT 
 		return super.authenticationManagerBean();
-	
 	}
 	
 	@Override
@@ -57,12 +67,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate").permitAll().
+				.authorizeRequests()
+				.antMatchers("/*/user").permitAll()
+				.antMatchers("/*/test").permitAll()
+				.antMatchers("/*/token").permitAll()
+				.antMatchers("/v2/api-docs",  "/swagger*/**", "/webjars/**").permitAll()  //whitelist Swagger UI resources
+				.antMatchers("/login", "/logout").permitAll()  //whitelist login and logout
+
 				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
+				.anyRequest().authenticated().and()
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 	}
