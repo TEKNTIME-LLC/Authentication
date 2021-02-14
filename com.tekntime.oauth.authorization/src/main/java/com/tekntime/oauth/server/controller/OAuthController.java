@@ -16,7 +16,7 @@ public class OAuthController {
 
     @GetMapping("/authenticate")
     public ResponseEntity<Principal> authenticate(final Principal principal) {
-    	logger.info("Authenticating ...");
+    	logger.info("Authenticating {}...", principal.getName());
         return ResponseEntity.ok(principal);
     }
 
