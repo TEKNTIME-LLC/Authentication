@@ -9,8 +9,9 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.tekntime.jwt.authorization.model.UserLogin;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -62,9 +63,9 @@ private  Boolean isTokenExpired(String token) {
 }
 
 //generate token for user
-public String generateToken(UserDetails userDetails) {
+public String generateToken(UserLogin userDetails) {
 	Map<String, Object> claims = new HashMap<>();
-	return doGenerateToken(claims, userDetails.getUsername());
+	return doGenerateToken(claims, userDetails.getLoginName());
 }
 
 
@@ -75,9 +76,9 @@ public String generateToken(UserDetails userDetails) {
 	}
 
 	//validate token
-	public  Boolean validateToken(String token, UserDetails userDetails) {
+	public  Boolean validateToken(String token, UserLogin userDetails) {
 		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+		return (username.equals(userDetails.getLoginName()) && !isTokenExpired(token));
 	}
 	
 	//validate token

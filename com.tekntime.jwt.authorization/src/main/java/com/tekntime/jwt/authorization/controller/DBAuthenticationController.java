@@ -1,14 +1,14 @@
 package com.tekntime.jwt.authorization.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tekntime.jwt.authorization.model.JwtRequest;
 import com.tekntime.jwt.authorization.model.JwtResponse;
+import com.tekntime.jwt.authorization.model.UserLogin;
 import com.tekntime.jwt.authorization.model.UserProfile;
 import com.tekntime.jwt.authorization.service.TekntimeUserDetailsService;
 import com.tekntime.jwt.authorization.util.JwtTokenUtil;
@@ -47,34 +48,35 @@ public class DBAuthenticationController {
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-		final String token = jwtTokenUtil.generateToken(userDetails);
+		UserLogin userLogin=new UserLogin();
+		userLogin.setLoginName(authenticationRequest.getUsername());
+		userLogin.setPassword(authenticationRequest.getPassword());
+		
+		Map<String,String> result = userDetailsService.authenticate( userLogin);
+		if(!result.containsValue(200)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+		}
+		final String token = jwtTokenUtil.generateToken(userLogin);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
-	private void authenticate(String username, String password) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			logger.error("USER_DISABLED");
-			throw new Exception("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			logger.error("INVALID_CREDENTIALS");
-			throw new Exception("INVALID_CREDENTIALS", e);
-		}
-	}
-
+	
 	@RequestMapping(value = "/token", method = RequestMethod.POST)
 	public ResponseEntity<?> validate(@RequestBody UserProfile userProfile) throws Exception {
-		UserDetails userDetailsInDB = this.userDetailsService.loadUserByUsername(userProfile.getUsername());
-		if(userDetailsInDB==null) {
-			logger.error("INVALID_USER");
-			throw new Exception("INVALID_USER");
+		UserLogin userLogin=new UserLogin();
+		userLogin.setLoginName(userProfile.getLoginName());
+		userLogin.setToken(userProfile.getToken());
+		
+		Map<String,String> result = userDetailsService.validateToken( userLogin);
+		if(!result.containsValue(200)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
-		final Boolean isValid = jwtTokenUtil.validateToken(userProfile.getToken(), userProfile.getUsername());
+
+		final Boolean isValid = jwtTokenUtil.validateToken(userProfile.getToken(), userProfile.getLoginName());
+		
 		if(isValid) {
-			return ResponseEntity.ok(userDetailsInDB);
+			UserLogin user =userDetailsService.loadUserByLoginName(userProfile.getLoginName());
+			return ResponseEntity.ok(user);
 		}else {
 			logger.error("INVALID_CREDENTIALS");
 			throw new Exception("INVALID_CREDENTIALS");

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tekntime.jwt.authorization.model.JwtRequest;
 import com.tekntime.jwt.authorization.model.JwtResponse;
+import com.tekntime.jwt.authorization.model.UserLogin;
 import com.tekntime.jwt.authorization.model.UserProfile;
 import com.tekntime.jwt.authorization.service.JwtUserDetailsService;
 import com.tekntime.jwt.authorization.util.JwtTokenUtil;
@@ -39,7 +40,7 @@ public class JwtAuthenticationController {
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final UserLogin userDetails = userDetailsService.loadUserByLoginName(authenticationRequest.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
@@ -48,12 +49,12 @@ public class JwtAuthenticationController {
 
 	@RequestMapping(value = "/token", method = RequestMethod.POST)
 	public ResponseEntity<?> validate(@RequestBody UserProfile userProfile) throws Exception {
-		UserDetails userDetailsInDB = this.userDetailsService.loadUserByUsername(userProfile.getUsername());
+		UserLogin userDetailsInDB = this.userDetailsService.loadUserByLoginName(userProfile.getLoginName());
 		if(userDetailsInDB==null) {
 			logger.error("INVALID_USER");
 			throw new Exception("INVALID_USER");
 		}
-		final Boolean isValid = jwtTokenUtil.validateToken(userProfile.getToken(), userProfile.getUsername());
+		final Boolean isValid = jwtTokenUtil.validateToken(userProfile.getToken(), userProfile.getLoginName());
 		if(isValid) {
 			return ResponseEntity.ok(userDetailsInDB);
 		}else {

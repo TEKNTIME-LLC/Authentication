@@ -1,23 +1,15 @@
 package com.tekntime.jwt.authorization.model;
 
-public class UserProfile {
-	private String username;
-	private String token;
-	
-	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
-	
-	
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Data
+@Getter 
+@Setter 
+@NoArgsConstructor
+public class UserProfile {
+	private String loginName;
+	private String token;
 }
