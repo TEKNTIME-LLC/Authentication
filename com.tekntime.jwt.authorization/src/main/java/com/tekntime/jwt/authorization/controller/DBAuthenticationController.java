@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +19,7 @@ import com.tekntime.jwt.authorization.model.JwtRequest;
 import com.tekntime.jwt.authorization.model.JwtResponse;
 import com.tekntime.jwt.authorization.model.UserLogin;
 import com.tekntime.jwt.authorization.model.UserProfile;
+import com.tekntime.jwt.authorization.service.AuthorityService;
 import com.tekntime.jwt.authorization.service.TekntimeUserDetailsService;
 import com.tekntime.jwt.authorization.util.JwtTokenUtil;
 
@@ -40,6 +40,9 @@ public class DBAuthenticationController {
 	@Autowired
 	private TekntimeUserDetailsService userDetailsService;
 	
+	@Autowired
+	private AuthorityService authorityService;
+	
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
     public String getApp() {
 		logger.info("reached JWT login app" );
@@ -53,7 +56,7 @@ public class DBAuthenticationController {
 		userLogin.setPassword(authenticationRequest.getPassword());
 		
 		Map<String,String> result = userDetailsService.authenticate( userLogin);
-		if(!result.containsValue(200)) {
+		if(result.containsValue(401)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 		final String token = jwtTokenUtil.generateToken(userLogin);
@@ -68,7 +71,7 @@ public class DBAuthenticationController {
 		userLogin.setToken(userProfile.getToken());
 		
 		Map<String,String> result = userDetailsService.validateToken( userLogin);
-		if(!result.containsValue(200)) {
+		if(result.containsValue(401)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 
@@ -76,6 +79,7 @@ public class DBAuthenticationController {
 		
 		if(isValid) {
 			UserLogin user =userDetailsService.loadUserByLoginName(userProfile.getLoginName());
+			user.setAuthorities(authorityService.loadByLoginId(user.getId()));
 			return ResponseEntity.ok(user);
 		}else {
 			logger.error("INVALID_CREDENTIALS");
