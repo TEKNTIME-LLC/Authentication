@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.tekntime.jwt.authorization.model.Authority;
 @Repository
 public interface AuthorityRepository extends CrudRepository<Authority, Integer> {
-	List<Authority> findByUserLoginId(int userLoginId);
+	List<Authority> findByUserid(int userid);
 }
 
     

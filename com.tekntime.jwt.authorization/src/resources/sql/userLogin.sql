@@ -11,9 +11,9 @@ GO
 CREATE TABLE [dbo].[userLogin](
 	[id] [int] NOT NULL,
 	[loginName] [varchar](50) NULL,
-	[firstName] [text] NULL,
-	[lastName] [text] NULL,
-	[middleInitial] [text] NULL,
+	[firstName] [varchar(50)] NULL,
+	[lastName] [varchar(50)] NULL,
+	[middleInitial] [varchar(50)] NULL,
 	[password] [varchar](max) NULL,
 	[createDate] [datetime] NULL,
 	[updateDate] [datetime] NULL,
@@ -27,8 +27,8 @@ CREATE TABLE [dbo].[userLogin](
 	[phone] [numeric](18, 0) NULL,
 	[addressLine1] [varchar](50) NULL,
 	[addressLine2] [varchar](50) NULL,
-	[city] [text] NULL,
-	[state] [text] NULL,
+	[city] [varchar(50)] NULL,
+	[state] [varchar(50)] NULL,
 	[zipCode] [numeric](18, 0) NULL,
 	[isEmailNotification] [bit] NULL,
 	[isTextMessageNotification] [bit] NULL,
@@ -39,5 +39,34 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
+---- MYSQL
+
+CREATE TABLE dbo.userLogin(
+	id int NOT NULL,
+	loginName varchar(50) NULL,
+	firstName varchar(50) NULL,
+	lastName varchar(50) NULL,
+	middleInitial varchar(50) NULL,
+	password varchar(2000) NULL,
+	createDate datetime NULL,
+	updateDate datetime NULL,
+	expiryDate datetime NULL,
+	isActive bit NULL,
+	isLocked bit NULL,
+	lastLoginDate datetime NULL,
+	loginAttempt int NULL,
+	isDeleted bit NULL,
+	email varchar(50) NULL,
+	phone numeric(18, 0) NULL,
+	addressLine1 varchar(50) NULL,
+	addressLine2 varchar(50) NULL,
+	city varchar(50) NULL,
+	state varchar(50) NULL,
+	zipCode varchar(18) NULL,
+	isEmailNotification bit NULL,
+	isTextMessageNotification bit NULL,
+	hashType varchar(25) NULL
+)
 
 

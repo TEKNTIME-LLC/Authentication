@@ -1,7 +1,6 @@
 package com.tekntime.jwt.authorization.model;
 
-import java.util.Date;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,8 +26,11 @@ public class Authority {
 	@GenericGenerator(name="increment", strategy = "increment") 
  	private int id;
 	
-	private int userLoginId;
+	private int userid;
 	
-	private String role;
+	@Column(name = "username")
+	private int loginName;
+	
+	private String authority;
 
 }

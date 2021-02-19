@@ -16,7 +16,7 @@ public class AuthorityService {
 	
 	
 	public List<Authority> loadByLoginId(int loginId) throws UsernameNotFoundException {
-		List<Authority>  authorities =repository.findByUserLoginId(loginId);
+		List<Authority>  authorities =repository.findByUserid(loginId);
 		return authorities;
 	}
 
