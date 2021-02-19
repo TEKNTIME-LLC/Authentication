@@ -1,6 +1,5 @@
 package com.tekntime.oauth.server.config;
 
-import java.io.IOException;
 import java.security.KeyPair;
 
 import javax.sql.DataSource;
@@ -12,7 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -25,6 +23,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import com.tekntime.oauth.server.service.TekntimeUserDetailsService;
 
 @Configuration
 @EnableAuthorizationServer
@@ -42,7 +42,7 @@ public class OAuthServerConfiguration extends AuthorizationServerConfigurerAdapt
 	@Autowired
     private  SecurityProperties securityProperties;
 	@Autowired
-    private  UserDetailsService userDetailsService;
+    private  TekntimeUserDetailsService userDetailsService;
 
     @Bean
     public TokenStore tokenStore() {

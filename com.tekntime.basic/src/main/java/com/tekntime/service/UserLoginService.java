@@ -51,51 +51,7 @@ public Iterable<UserLogin> getAllLogin() {
 	return repository.findAll();
 }
 public Map<String,String> saveLogin(UserLogin user) throws Exception {
-	Map<String,String> result=new HashMap();
-	if (user.getLoginName()==null ||user.getLoginName().isEmpty()) {
-		result.put("Login name is empty", "400");
-	} else {
-		String newName= user.getLoginName().replaceAll(" ", "");
-		user.setLoginName(newName);
-	}
-	
-	if (user.getPassword()==null ||user.getPassword().isEmpty()) {
-		result.put("password is empty", "400");
-		
-	//create logic for password to have lower case, upper case, and symbols with at least 9 characters		
-
-	}else if (!user.getPassword().matches(PASSWORD_PATTERN)) {
-		result.put("Password is invalid", "400");
-		}
-		
-	if (user.getFirstName()==null || user.getFirstName().isEmpty()) {
-		result.put("First Name is empty", "400");
-	}
-
-	if (user.getLastName()==null || user.getLastName().isEmpty()) {
-		result.put("Last Name is empty", "400");
-	}
-	
-	if (user.getEmail()==null || user.getEmail().isEmpty()) {
-		result.put("Email address is empty", "400");
-		
-	}else if (!user.getEmail().matches(EMAIL_PATTERN)) {
-		result.put("Email address is invalid", "400");
-	}
-
-	if (user.getPhone()==null || user.getPhone().isEmpty()) { 
-		result.put ("Phone number is empty", "400");
-	}else {
-	    String newPhone= user.getPhone().replaceAll(" ", "");
-	    newPhone=newPhone.replaceAll("-", "");
-	   // newPhone=newPhone.replaceAll("(", "");
-	   //newPhone=newPhone.replaceAll(")", "");
-	    user.setPhone(newPhone);
-	    
-	if (!user.getPhone().matches (REGEX)) {
-			result.put("Phone number is invalid", "400");
-	} 
-	}
+	Map<String,String> result=user.validate();
 	
 	if (!result.isEmpty()) {
 		logger.error("Login failed {}", result);
@@ -154,47 +110,14 @@ public Map<String, String> authenticate (String loginName, String password, Stri
 
 public Map<String, String> authenticate (String loginName, String password) throws Exception {
 	UserLogin userLogin=repository.findByLoginName(loginName);
-	Map<String,String> result=new HashMap();
+	Map<String,String> result=userLogin.isValidAccount();
 	
-	//verify account is locked or deleted. If locked or deleted authentication failed
-	if (userLogin.isLocked()) {
-		result.put("Your account is locked", "500");
-		logger.info("User account is locked", userLogin.isLocked());
+	if (!result.isEmpty()) {
+		logger.error("Login failed {}", result);
 		return result;
-	}
-	// create logic if account is deleted, authentication should failed
-	if (userLogin.isDeleted()) {
-		result.put("Your account is deleted", "500");
-		logger.info("User account is deleted", userLogin.isDeleted());
-		return result;
-	}
-	// write a logic if account is not active it should not authenticate
-	if (!userLogin.isActive()) {
-		result.put("Your account is not active", "500");
-		logger.info("User account is not active", userLogin.isActive());
-		return result;
+	
 	}
 	
-	if (userLogin.getLoginAttempt()>= 5 ) {
-		result.put("Too many attempts", "500");
-		userLogin.setLocked(true);
-		repository.save(userLogin);
-		logger.info("User account is locked. Too many attempts {} ", loginName);		
-		return result;
-	}
-	
-	int expiredate = userLogin.getLastLoginDate().compareTo(userLogin.getUpdateDate());
-	if (expiredate >= 1 ) {	
-		result.put("Your password is expired", "500");	
-		logger.warn("User account password expired");
-		return result;
-	} else {
-	    long diff= dateDiffIndays(userLogin.getExpiryDate(), new Date());
-		result.put("Your password expires in " + diff+ " days", "200");
-		if (diff <= 0) {
-		logger.warn("User account password expires in", diff);
-		return result;
-	}
 	
 	if (userLogin.getHashType()== null) {
 		//decrypt the password and validate
@@ -235,22 +158,15 @@ public Map<String, String> authenticate (String loginName, String password) thro
 	}  		
 	repository.save(userLogin);
 	
-	//code for the logger if is 200 then info or else error
 
 	if (result.put("successfully authenticated", "200")!=null) {
 		logger.info("Authentication successful");
-		
-	
-		
-		
-		}else {
-			logger.error("Authentication failed", result);
-		}
-	
-	//logger.info("Authentication login result for user {} is {}", userLogin.getLoginName(), result);
+	}else {
+		logger.error("Authentication failed", result);
+	}
 	return result;
 	
-	}
+	
 }
 
 	private long dateDiffIndays(Date date1, Date date2){

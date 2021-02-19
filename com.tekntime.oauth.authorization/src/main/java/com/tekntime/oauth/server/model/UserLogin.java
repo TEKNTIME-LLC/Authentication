@@ -1,9 +1,10 @@
-package com.tekntime.model;
+package com.tekntime.oauth.server.model;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,8 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
 import lombok.Getter;
@@ -27,7 +30,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "userLogin")
 @Table(name = "userLogin")
-public class UserLogin {
+public class UserLogin implements UserDetails{
 	@Transient
 	private static final String EMAIL_PATTERN =	"^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 	@Transient
@@ -65,29 +68,36 @@ public class UserLogin {
 	private boolean isTextMessageNotification;
 	private String hashType;
 	
+	@Transient
+	private String token;
+	
+	@Transient
+	private List<Authority>  roles;
+	
+	
 	public Map<String,String> isValidAccount() {
-		Map<String,String> result=new HashMap();
+		Map<String,String> result=new HashMap<>();
 		
 		//verify account is locked or deleted. If locked or deleted authentication failed
 		if (this.isLocked()) {
-			result.put("Your account is locked", "500");
+			result.put("Your account is locked", "401");
 		}
 		// create logic if account is deleted, authentication should failed
 		if (this.isDeleted()) {
-			result.put("Your account is deleted", "500");
+			result.put("Your account is deleted", "401");
 		}
 		// write a logic if account is not active it should not authenticate
 		if (!this.isActive()) {
-			result.put("Your account is not active", "500");
+			result.put("Your account is not active", "401");
 		}
 		
 		int expiredate = this.getLastLoginDate().compareTo(this.getUpdateDate());
 		if (expiredate >= 1 ) {	
-			result.put("Your password is expired", "500");	
+			result.put("Your password is expired", "401");	
 		}
 		
 		if (this.getLoginAttempt()>= 5 ) {
-			result.put("Too many attempts", "500");
+			result.put("Too many attempts", "401");
 		}
 	
 		return result;
@@ -96,7 +106,7 @@ public class UserLogin {
 
 	
 	public Map<String,String> validate() {
-		Map<String,String> result=new HashMap();
+		Map<String,String> result=new HashMap<>();
 		if (this.getLoginName()==null ||this.getLoginName().isEmpty()) {
 			result.put("Login name is empty", "400");
 		} else {
@@ -138,6 +148,63 @@ public class UserLogin {
 		}
 		
 		return result;
+
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities(){
+		return null;
+		
+	}
+
+	@Override
+	public String getUsername() {
+		return loginName;
+	}
+
+
+
+	@Override
+	public boolean isAccountNonExpired() {
+		int expiredate = this.getLastLoginDate().compareTo(this.getUpdateDate());
+		if (expiredate >= 1 ) {	
+			return true;
+		}
+		return false;
+	}
+
+
+
+	@Override
+	public boolean isAccountNonLocked() {
+		if (this.isLocked()) {
+			return true;
+		}
+		return false;
+
+	}
+
+
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		int expiredate = this.getLastLoginDate().compareTo(this.getUpdateDate());
+		if (expiredate >= 1 ) {	
+			return true;
+		}
+		return false;
+		
+	}
+
+
+
+	@Override
+	public boolean isEnabled() {
+		// write a logic if account is not active it should not authenticate
+		if (!this.isActive()) {
+			return false;
+		}
+		return true;
 
 	}
 
