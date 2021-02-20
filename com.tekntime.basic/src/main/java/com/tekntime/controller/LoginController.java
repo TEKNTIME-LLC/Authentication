@@ -40,8 +40,7 @@ public class LoginController {
 		try {
 			result = service.saveLogin(user);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("", e);
 		}
 	     return result;
 	}
@@ -50,11 +49,9 @@ public class LoginController {
 		Map<String, String> result = null;
 		try {
 			result = service.saveLogin(user);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}catch (Exception e) {
+			logger.error("", e);
 		}
-		logger.info("Updating user {}", user);
 	     return result;
 	}	
 	
