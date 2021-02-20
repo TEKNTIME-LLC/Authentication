@@ -32,6 +32,7 @@
     <module>com.tekntime.mfa</module>
     <module>com.tekntime.proxy</module>
     <module>com.tekntime.basic.proxy</module>
+    <module>micro.account.management</module>
   </modules>
   
   <dependencies>
