@@ -34,6 +34,7 @@ public class TekntimeUserDetailsService {
 	public UserLogin loadUserByLoginName(String username) throws UsernameNotFoundException {
 		UserLogin user =repository.findByLoginName(username);
 		if(user !=null ) {
+			logger.info("--> Found user {}: ", user);
 			return user;
 		} else {
 			logger.error("User not found with username: " + username);
@@ -55,7 +56,7 @@ public class TekntimeUserDetailsService {
 	}
 	
   public Map<String, String> authenticate (UserLogin user) throws Exception {
-	  final UserLogin userLogin = repository.findByLoginName(user.getLoginName());
+	  final UserLogin userLogin = loadUserByLoginName(user.getLoginName());
 	  final String password=user.getPassword();
 	  
 		Map<String,String> result=userLogin.isValidAccount();
