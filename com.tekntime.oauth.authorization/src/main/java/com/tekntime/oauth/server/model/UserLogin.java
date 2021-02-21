@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,6 +32,8 @@ import lombok.Setter;
 @Entity(name = "userLogin")
 @Table(name = "userLogin")
 public class UserLogin implements UserDetails{
+	private static final long serialVersionUID = 1L;
+	
 	@Transient
 	private static final String EMAIL_PATTERN =	"^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 	@Transient
@@ -75,29 +78,29 @@ public class UserLogin implements UserDetails{
 	private List<Authority>  roles;
 	
 	
-	public Map<String,String> isValidAccount() {
-		Map<String,String> result=new HashMap<>();
+	public Map<String,HttpStatus> isValidAccount() {
+		Map<String,HttpStatus> result=new HashMap<>();
 		
 		//verify account is locked or deleted. If locked or deleted authentication failed
 		if (this.isLocked()) {
-			result.put("Your account is locked", "401");
+			result.put("Your account is locked", HttpStatus.UNAUTHORIZED);
 		}
 		// create logic if account is deleted, authentication should failed
 		if (this.isDeleted()) {
-			result.put("Your account is deleted", "401");
+			result.put("Your account is deleted", HttpStatus.UNAUTHORIZED);
 		}
 		// write a logic if account is not active it should not authenticate
 		if (!this.isActive()) {
-			result.put("Your account is not active", "401");
+			result.put("Your account is not active", HttpStatus.UNAUTHORIZED);
 		}
 		
 		int expiredate = this.getLastLoginDate().compareTo(this.getUpdateDate());
 		if (expiredate >= 1 ) {	
-			result.put("Your password is expired", "401");	
+			result.put("Your password is expired", HttpStatus.UNAUTHORIZED);	
 		}
 		
 		if (this.getLoginAttempt()>= 5 ) {
-			result.put("Too many attempts", "401");
+			result.put("Too many attempts", HttpStatus.UNAUTHORIZED);
 		}
 	
 		return result;
@@ -105,45 +108,45 @@ public class UserLogin implements UserDetails{
 	
 
 	
-	public Map<String,String> validate() {
-		Map<String,String> result=new HashMap<>();
+	public Map<String,HttpStatus> validate() {
+		Map<String,HttpStatus> result=new HashMap<>();
 		if (this.getLoginName()==null ||this.getLoginName().isEmpty()) {
-			result.put("Login name is empty", "400");
+			result.put("Login name is empty", HttpStatus.BAD_REQUEST);
 		} else {
 			String newName= this.getLoginName().replaceAll(" ", "");
 			this.setLoginName(newName);
 		}
 		
 		if (this.getPassword()==null ||this.getPassword().isEmpty()) {
-			result.put("password is empty", "400");
+			result.put("password is empty", HttpStatus.BAD_REQUEST);
 		}else if (!this.getPassword().matches(PASSWORD_PATTERN)) {
-			result.put("Password is invalid", "400");
+			result.put("Password is invalid", HttpStatus.BAD_REQUEST);
 		}
 			
 		if (this.getFirstName()==null || this.getFirstName().isEmpty()) {
-			result.put("First Name is empty", "400");
+			result.put("First Name is empty", HttpStatus.BAD_REQUEST);
 		}
 
 		if (this.getLastName()==null || this.getLastName().isEmpty()) {
-			result.put("Last Name is empty", "400");
+			result.put("Last Name is empty", HttpStatus.BAD_REQUEST);
 		}
 		
 		if (this.getEmail()==null || this.getEmail().isEmpty()) {
-			result.put("Email address is empty", "400");
+			result.put("Email address is empty", HttpStatus.BAD_REQUEST);
 			
 		}else if (!this.getEmail().matches(EMAIL_PATTERN)) {
-			result.put("Email address is invalid", "400");
+			result.put("Email address is invalid", HttpStatus.BAD_REQUEST);
 		}
 
 		if (this.getPhone()==null || this.getPhone().isEmpty()) { 
-			result.put ("Phone number is empty", "400");
+			result.put ("Phone number is empty", HttpStatus.BAD_REQUEST);
 		}else {
 		    String newPhone= this.getPhone().replaceAll(" ", "");
 		    newPhone=newPhone.replaceAll("-", "");
 		    this.setPhone(newPhone);
 		    
 			if (!this.getPhone().matches (REGEX)) {
-					result.put("Phone number is invalid", "400");
+					result.put("Phone number is invalid", HttpStatus.BAD_REQUEST);
 			} 
 		}
 		

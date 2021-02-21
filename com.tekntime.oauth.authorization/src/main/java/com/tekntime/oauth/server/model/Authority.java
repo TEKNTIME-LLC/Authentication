@@ -29,7 +29,7 @@ public class Authority {
 	private int userid;
 	
 	@Column(name = "username")
-	private int loginName;
+	private String loginName;
 	
 	private String authority;
 
