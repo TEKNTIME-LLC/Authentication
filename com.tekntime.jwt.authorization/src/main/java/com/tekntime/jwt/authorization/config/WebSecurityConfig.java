@@ -37,9 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
 				.authorizeRequests()
-				.antMatchers("/*/user").permitAll()
-				.antMatchers("/*/test").permitAll()
-				.antMatchers("/*/token").permitAll()
+				.antMatchers("/authenticate/user","/repo/user").permitAll()
+				.antMatchers("/authenticate/test","/repo/test").permitAll()
+				.antMatchers("/authenticate/token","/repo/token").permitAll()
 				.antMatchers("/v2/api-docs",  "/swagger*/**", "/webjars/**").permitAll()  //whitelist Swagger UI resources
 				.antMatchers("/login", "/logout").permitAll()  //whitelist login and logout
 

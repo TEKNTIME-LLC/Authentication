@@ -46,10 +46,10 @@ public class DBAuthenticationController {
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+		logger.info("==>> Received message {} ", authenticationRequest.getUsername());
 		UserLogin userLogin=new UserLogin();
 		userLogin.setLoginName(authenticationRequest.getUsername());
 		userLogin.setPassword(authenticationRequest.getPassword());
-		
 		Map<String,String> result = userDetailsService.authenticate( userLogin);
 		if(result.containsValue(401)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
@@ -61,6 +61,7 @@ public class DBAuthenticationController {
 	
 	@RequestMapping(value = "/token", method = RequestMethod.POST)
 	public ResponseEntity<?> validate(@RequestBody UserProfile userProfile) throws Exception {
+		logger.info("==>> Received message {} ", userProfile.getLoginName());
 		UserLogin userLogin=new UserLogin();
 		userLogin.setLoginName(userProfile.getLoginName());
 		userLogin.setToken(userProfile.getToken());
