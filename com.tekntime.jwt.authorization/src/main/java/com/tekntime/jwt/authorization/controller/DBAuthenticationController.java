@@ -46,9 +46,9 @@ public class DBAuthenticationController {
 	
 	@RequestMapping(value = "/user", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		logger.info("==>> Received message {} ", authenticationRequest.getUsername());
+		logger.info("==>> Received message {} ", authenticationRequest.getLoginName());
 		UserLogin userLogin=new UserLogin();
-		userLogin.setLoginName(authenticationRequest.getUsername());
+		userLogin.setLoginName(authenticationRequest.getLoginName());
 		userLogin.setPassword(authenticationRequest.getPassword());
 		Map<String,String> result = userDetailsService.authenticate( userLogin);
 		if(result.containsValue(401)) {
