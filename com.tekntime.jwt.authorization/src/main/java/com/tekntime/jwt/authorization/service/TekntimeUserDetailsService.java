@@ -1,31 +1,25 @@
 package com.tekntime.jwt.authorization.service;
 
+import java.util.Base64;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tekntime.jwt.authorization.model.UserLogin;
 import com.tekntime.jwt.authorization.repository.UserRepository;
-import com.tekntime.jwt.authorization.util.MD5SecurityImpl;
-import com.tekntime.jwt.authorization.util.SHASecurityImpl;
 
 @Service
 public class TekntimeUserDetailsService {
 	private static final Logger logger   = LoggerFactory.getLogger(TekntimeUserDetailsService.class);	
-	
-	@Autowired
-	@Qualifier("SHASecurityImpl")
-	SHASecurityImpl security;
-	@Autowired
-	@Qualifier ("MD5SecurityImpl")
-	MD5SecurityImpl md5security;
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private UserRepository repository;
@@ -70,8 +64,8 @@ public class TekntimeUserDetailsService {
 		
 		if (userLogin.getHashType()== null) {
 			//decrypt the password and validate
-			String decodedPassword = security.decode(userLogin.getPassword());
-			if (decodedPassword.equals(password)) {
+			String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
+			if (encodedPassword.equals(password)) {
 				result.put("successfully authenticated",  HttpStatus.OK);
 				userLogin.setLoginAttempt(0);
 			}else{
@@ -80,8 +74,8 @@ public class TekntimeUserDetailsService {
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
 			}
-		} else if (userLogin.getHashType().equalsIgnoreCase("sha256")) {
-			String shPassword = security.encrypt(password);
+		} else {
+			String shPassword = passwordEncoder.encode(password);
 			if (userLogin.getPassword().equals(shPassword)) {				
 				result.put("successfully authenticated", HttpStatus.OK);
 				userLogin.setLoginAttempt(0);
@@ -92,19 +86,7 @@ public class TekntimeUserDetailsService {
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
 			}
-		} else if (userLogin.getHashType().equalsIgnoreCase("MD5")) {
-			String md5Password = md5security.encrypt(password);
-			if (userLogin.getPassword().equals(md5Password)) {				
-				result.put("successfully authenticated", HttpStatus.OK);
-				userLogin.setLoginAttempt(0);
-
-			}else{
-				result.put("authentication failed",  HttpStatus.UNAUTHORIZED);
-				int attempt = userLogin.getLoginAttempt();
-				attempt++;
-				userLogin.setLoginAttempt(attempt);
-			}
-		}  		
+		} 
 		
 		repository.save(userLogin);
 
