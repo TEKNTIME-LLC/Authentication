@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.tekntime.jwt.authorization.model.UserLogin;
 import com.tekntime.jwt.authorization.repository.UserRepository;
-import com.tekntime.jwt.authorization.util.JwtTokenUtil;
 import com.tekntime.jwt.authorization.util.MD5SecurityImpl;
 import com.tekntime.jwt.authorization.util.SHASecurityImpl;
 
@@ -73,7 +72,7 @@ public class TekntimeUserDetailsService {
 				result.put("successfully authenticated", "200");
 				userLogin.setLoginAttempt(0);
 			}else{
-				result.put("authentication failed", "400");
+				result.put("authentication failed", "401");
 				int attempt = userLogin.getLoginAttempt();
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
@@ -85,7 +84,7 @@ public class TekntimeUserDetailsService {
 				userLogin.setLoginAttempt(0);
 
 			}else{
-				result.put("authentication failed", "400");
+				result.put("authentication failed", "401");
 				int attempt = userLogin.getLoginAttempt();
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
@@ -97,7 +96,7 @@ public class TekntimeUserDetailsService {
 				userLogin.setLoginAttempt(0);
 
 			}else{
-				result.put("authentication failed", "400");
+				result.put("authentication failed", "401");
 				int attempt = userLogin.getLoginAttempt();
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
