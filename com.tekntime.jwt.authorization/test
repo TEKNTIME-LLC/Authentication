@@ -21,6 +21,13 @@ C:\Users\susan>curl -X POST https://jwt.tekmlai.com/jwt/repo/user -H "Content-Ty
 
 
 
+curl -X POST https://jwt.tekmlai.com/jwt/repo/token -H "Content-Type: application/json" -d "{\"loginName\": \"user\", \"token\":\"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjEzODk1NzMyLCJpYXQiOjE2MTM4Nzc3MzJ9.8dy1W7Me7TVrxM3jdjKKe0ucqcMlwpTZ1viAMehlfFFJLsZHlZS4SAfeIJ8ItuKeFnXHDI4FVJwv5pF1Upc6nA\"}"
+{"id":1,"loginName":"user","firstName":"user_first_name","lastName":"lastname","middleInitial":"mi","password":"cGFzcw==","createDate":"2021-02-20T05:00:00.000+0000",
+"updateDate":"2021-02-21T03:22:13.000+0000","expiryDate":"2021-02-20T05:00:00.000+0000","lastLoginDate":"2021-02-20T05:00:00.000+0000","loginAttempt":0,
+"email":"sushant.k@tekntime.com","phone":"3176520762","addressLine1":"1 main street","addressLine2":null,"city":"New York","state":"NY","zipCode":110011,"hashType":null,
+"token":null,"authorities":[{"id":1,"userid":1,"loginName":"user","authority":"ADMIN"},{"id":2,"userid":1,"loginName":"user","authority":"MANAGER"}],
+"active":true,"locked":false,"deleted":false,"emailNotification":false,"textMessageNotification":false}
+
 To connect Mongo database use TekntimeUserDetailsService.java
 by setting in WebConfig file.
 

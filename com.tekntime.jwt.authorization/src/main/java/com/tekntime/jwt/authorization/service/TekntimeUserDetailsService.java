@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +42,10 @@ public class TekntimeUserDetailsService {
 	   }
 	}
 	
-	public Map<String, String> validateToken (UserLogin user) throws Exception {
+	public Map<String, HttpStatus> validateToken (UserLogin user) throws Exception {
 		final UserLogin userLogin =loadUserByLoginName(user.getLoginName());
 		  
-			Map<String,String> result=userLogin.isValidAccount();
+			Map<String,HttpStatus> result=userLogin.isValidAccount();
 			
 			logger.info("--> Found user {}: ", result);
 			
@@ -56,13 +57,13 @@ public class TekntimeUserDetailsService {
 			return result;
 	}
 	
-  public Map<String, String> authenticate (UserLogin user) throws Exception {
+  public Map<String, HttpStatus> authenticate (UserLogin user) throws Exception {
 	  final UserLogin userLogin = loadUserByLoginName(user.getLoginName());
 	  final String password=user.getPassword();
 	  
-		Map<String,String> result=userLogin.isValidAccount();
+		Map<String,HttpStatus> result=userLogin.isValidAccount();
 		
-		if (!result.isEmpty()) {
+		if (result.containsValue( HttpStatus.UNAUTHORIZED)) {
 			logger.error("Login failed {}", result);
 			return result;
 		}
@@ -71,10 +72,10 @@ public class TekntimeUserDetailsService {
 			//decrypt the password and validate
 			String decodedPassword = security.decode(userLogin.getPassword());
 			if (decodedPassword.equals(password)) {
-				result.put("successfully authenticated", "200");
+				result.put("successfully authenticated",  HttpStatus.OK);
 				userLogin.setLoginAttempt(0);
 			}else{
-				result.put("authentication failed", "401");
+				result.put("authentication failed",  HttpStatus.UNAUTHORIZED);
 				int attempt = userLogin.getLoginAttempt();
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
@@ -82,11 +83,11 @@ public class TekntimeUserDetailsService {
 		} else if (userLogin.getHashType().equalsIgnoreCase("sha256")) {
 			String shPassword = security.encrypt(password);
 			if (userLogin.getPassword().equals(shPassword)) {				
-				result.put("successfully authenticated", "200");
+				result.put("successfully authenticated", HttpStatus.OK);
 				userLogin.setLoginAttempt(0);
 
 			}else{
-				result.put("authentication failed", "401");
+				result.put("authentication failed",  HttpStatus.UNAUTHORIZED);
 				int attempt = userLogin.getLoginAttempt();
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
@@ -94,11 +95,11 @@ public class TekntimeUserDetailsService {
 		} else if (userLogin.getHashType().equalsIgnoreCase("MD5")) {
 			String md5Password = md5security.encrypt(password);
 			if (userLogin.getPassword().equals(md5Password)) {				
-				result.put("successfully authenticated", "200");
+				result.put("successfully authenticated", HttpStatus.OK);
 				userLogin.setLoginAttempt(0);
 
 			}else{
-				result.put("authentication failed", "401");
+				result.put("authentication failed",  HttpStatus.UNAUTHORIZED);
 				int attempt = userLogin.getLoginAttempt();
 				attempt++;
 				userLogin.setLoginAttempt(attempt);
@@ -106,16 +107,13 @@ public class TekntimeUserDetailsService {
 		}  		
 		
 		repository.save(userLogin);
-		
 
-		if (result.put("successfully authenticated", "200")!=null) {
-			logger.info("Authentication successful");
+		if (result.containsValue( HttpStatus.UNAUTHORIZED)) {
+			logger.error("Authentication failed {}", result);
 		}else {
-			logger.error("Authentication failed", result);
+			logger.info("Authentication successful");	
 		}
 		return result;
-		
-		
 	}
 
 }

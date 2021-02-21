@@ -50,8 +50,8 @@ public class DBAuthenticationController {
 		UserLogin userLogin=new UserLogin();
 		userLogin.setLoginName(authenticationRequest.getLoginName());
 		userLogin.setPassword(authenticationRequest.getPassword());
-		Map<String,String> result = userDetailsService.authenticate( userLogin);
-		if(result.containsValue(401)) {
+		Map<String,HttpStatus> result = userDetailsService.authenticate( userLogin);
+		if(result.containsValue(HttpStatus.UNAUTHORIZED)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 		final String token = jwtTokenUtil.generateToken(userLogin);
@@ -66,8 +66,8 @@ public class DBAuthenticationController {
 		userLogin.setLoginName(userProfile.getLoginName());
 		userLogin.setToken(userProfile.getToken());
 		
-		Map<String,String> result = userDetailsService.validateToken( userLogin);
-		if(result.containsValue(401)) {
+		Map<String,HttpStatus> result = userDetailsService.validateToken( userLogin);
+		if(result.containsValue(HttpStatus.UNAUTHORIZED)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 
