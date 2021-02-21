@@ -1,5 +1,6 @@
 package com.tekntime.oauth.server.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -156,8 +157,10 @@ public class UserLogin implements UserDetails{
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities(){
-		return null;
-		
+		if(roles==null) {
+			roles=new ArrayList<>();
+		}
+		return roles;
 	}
 
 	@Override
@@ -171,9 +174,9 @@ public class UserLogin implements UserDetails{
 	public boolean isAccountNonExpired() {
 		int expiredate = this.getLastLoginDate().compareTo(this.getUpdateDate());
 		if (expiredate >= 1 ) {	
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 
@@ -181,9 +184,9 @@ public class UserLogin implements UserDetails{
 	@Override
 	public boolean isAccountNonLocked() {
 		if (this.isLocked()) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 
 	}
 
@@ -193,9 +196,9 @@ public class UserLogin implements UserDetails{
 	public boolean isCredentialsNonExpired() {
 		int expiredate = this.getLastLoginDate().compareTo(this.getUpdateDate());
 		if (expiredate >= 1 ) {	
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 		
 	}
 

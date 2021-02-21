@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
 
 import lombok.Data;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "authorities")
 @Table(name = "authorities")
-public class Authority {
+public class Authority implements GrantedAuthority{
 	
 	@Id
 	@GeneratedValue(generator="increment")
