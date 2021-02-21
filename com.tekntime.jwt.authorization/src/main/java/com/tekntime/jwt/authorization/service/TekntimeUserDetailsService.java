@@ -42,9 +42,11 @@ public class TekntimeUserDetailsService {
 	}
 	
 	public Map<String, String> validateToken (UserLogin user) throws Exception {
-		final UserLogin userLogin = repository.findByLoginName(user.getLoginName());
+		final UserLogin userLogin =loadUserByLoginName(user.getLoginName());
 		  
 			Map<String,String> result=userLogin.isValidAccount();
+			
+			logger.info("--> Found user {}: ", result);
 			
 			if (!result.isEmpty()) {
 				logger.error("Login failed {}", result);

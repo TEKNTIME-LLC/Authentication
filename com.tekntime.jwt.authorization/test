@@ -16,8 +16,9 @@ USE CURL
 -------------
 
 
-curl -X POST https://jwt.tekmlai.com/jwt/authenticate/user -H "Content-Type: application/json" -d "{\"username\": \"tekntime\", \"password\":\"password\"}"
-{"token":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWtudGltZSIsImV4cCI6MTYxMzMzMjExNCwiaWF0IjoxNjEzMzE0MTE0fQ.l_TuWJ30OxEKj0dunkKqV8y5965pV8jdUSm3sxGQJ9D8hvuCTdrT048lZJpn8SmC8927o2ViNMF2EjTKbQYLFQ"}
+C:\Users\susan>curl -X POST https://jwt.tekmlai.com/jwt/repo/user -H "Content-Type: application/json" -d "{\"loginName\": \"user\", \"password\":\"pass\"}"
+{"jwttoken":"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNjEzODk0NTk2LCJpYXQiOjE2MTM4NzY1OTZ9.8sBhp6Kh3P4o9GJKhV7xGS3cRgt_M84DG8aJHt8Nm7AiiQGAFzrm_mZMGbz2CPZw25iXmEyeTXtI5e-EJRtTbA"}
+
 
 
 To connect Mongo database use TekntimeUserDetailsService.java
