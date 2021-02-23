@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tekntime.auth.microservice.model.EmailNotification;
@@ -38,13 +39,12 @@ SHASecurityImpl security;
 @Qualifier ("MD5SecurityImpl")
 MD5SecurityImpl md5security;
 
-
 public UserLogin getLogin(String name) {
 	return repository.findByLoginName(name);
 }
 
-public Map<String,String> saveLogin(UserLogin user) throws Exception {
-	Map<String,String> result=user.validate();
+public Map<String,HttpStatus> saveLogin(UserLogin user) throws Exception {
+	Map<String,HttpStatus> result=user.validate();
 	
 	if (!result.isEmpty()) {
 		logger.error("Login failed {}", result);
@@ -53,7 +53,7 @@ public Map<String,String> saveLogin(UserLogin user) throws Exception {
 
 	UserLogin dbuser=repository.findByLoginName(user.getLoginName());
 	if (dbuser != null){
-		result.put("Login name already exist", "400");
+		result.put("Login name already exist",  HttpStatus.BAD_REQUEST);
 		logger.error("Failed to save. Login named already exist{}", user);
 		return result;
 	}
@@ -70,18 +70,18 @@ public Map<String,String> saveLogin(UserLogin user) throws Exception {
 	}
 	repository.save(user); 
 	logger.info("User created successfully {}", user.getLoginName());
-		result.put("successfully saved", "200");
+		result.put("successfully saved",  HttpStatus.OK);
 	 return result; 
 	 }	
 
 
 
-public Map<String,String> passwordReset (UserLogin user) {
-	Map<String,String> result=new HashMap<>();
+public Map<String,HttpStatus> passwordReset (UserLogin user) {
+	Map<String,HttpStatus> result=new HashMap<>();
 		UserLogin userReset = getLogin(user.getLoginName());
 		
 	if (userReset.getLoginName()== null) {
-		result.put("Incorrect loginName or loginName does not exists", "500");
+		result.put("Incorrect loginName or loginName does not exists",  HttpStatus.BAD_REQUEST);
 		return result;
 	}
 	//write else if to valid if email address exist in db
@@ -108,17 +108,17 @@ public Map<String,String> passwordReset (UserLogin user) {
 		service.emailNotify(passwordNotify); 
 		
 	repository.save(userReset);
-	result.put("password changed successfully", "200");
+	result.put("password changed successfully",  HttpStatus.OK);
 	return result;
 }
 	
 
 
-public Map<String,String> updateAccount(UserLogin user) {
-	Map<String,String> result=new HashMap<>();
+public Map<String,HttpStatus> updateAccount(UserLogin user) {
+	Map<String,HttpStatus> result=new HashMap<>();
 	UserLogin userReset = repository.findByLoginName(user.getLoginName());	
 	if (userReset.getLoginName()== null) {
-		result.put("Incorrect loginName or loginName does not exists", "500");
+		result.put("Incorrect loginName or loginName does not exists",  HttpStatus.BAD_REQUEST);
 		return result;
 	}
 	userReset.setActive(true);
@@ -126,7 +126,7 @@ public Map<String,String> updateAccount(UserLogin user) {
 	userReset.setLocked(false);	
 	setExpiryDate( userReset);
 	repository.save(userReset);
-	result.put("Account is successfully updated", "200");
+	result.put("Account is successfully updated", HttpStatus.OK);
 	return result;
 }
 

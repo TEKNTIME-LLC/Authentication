@@ -4,6 +4,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,63 +25,54 @@ public class AccountManagementController {
 	private AccountManagementService service; 
 		
 	@RequestMapping( path="/create", method=RequestMethod.POST)
-	public Map<String,String> create( @RequestBody UserLogin user) {
-		Map<String, String> result = null;
-		try {
-			result = service.saveLogin(user);
-		} catch (Exception e) {
-			logger.error("", e);
-		}
+	public Map<String,HttpStatus> create( @RequestBody UserLogin user) throws Exception {
+		 Map<String,HttpStatus> result = service.saveLogin(user);
+	
 	     return result;
 	}
 	@RequestMapping(path="/update", method=RequestMethod.PUT)
-	public Map<String,String> update( @RequestBody UserLogin user) {
-		Map<String, String> result = null;
-		try {
-			result = service.saveLogin(user);
-		}catch (Exception e) {
-			logger.error("", e);
-		}
+	public Map<String,HttpStatus> update( @RequestBody UserLogin user) throws Exception {
+		 Map<String,HttpStatus> result =  service.saveLogin(user);
 	     return result;
 	}	
 	
 	@RequestMapping(path="/reset", method=RequestMethod.PUT)
-	public Map<String, String> reset(@RequestParam String loginName) {
+	public  Map<String,HttpStatus> reset(@RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String, String> result =service.passwordReset(user);
+		 Map<String,HttpStatus> result =service.passwordReset(user);
 	     return result;
 	}
 	
 	@RequestMapping( path="/unlock", method=RequestMethod.PUT)
-	public Map<String, String> unlock( @RequestParam String loginName) {
+	public  Map<String,HttpStatus> unlock( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.updateAccount(user);
+		Map<String,HttpStatus> result =service.updateAccount(user);
 		return result;
 	}
 	
-	@RequestMapping( path="/activate", method=RequestMethod.GET)
-	public Map<String, String> activate( @RequestParam String loginName) {
+	@RequestMapping( path="/activate", method=RequestMethod.PUT)
+	public  Map<String,HttpStatus> activate( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.updateAccount(user);
+		Map<String,HttpStatus> result =service.updateAccount(user);
 		return result;
 	}
 	
 	@RequestMapping( path="/undelete", method=RequestMethod.PUT)
-	public Map<String, String> undelete( @RequestParam String loginName) {
+	public  Map<String,HttpStatus> undelete( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.updateAccount(user);
+		Map<String,HttpStatus> result =service.updateAccount(user);
 		return result;
 	}
 	
 	@RequestMapping( path="/expirydate", method=RequestMethod.PUT)
-	public Map<String, String> expiryDate( @RequestParam String loginName) {
+	public  Map<String,HttpStatus> expiryDate( @RequestParam String loginName) {
 		UserLogin user = new UserLogin();
 		user.setLoginName(loginName);
-		Map<String,String> result =service.updateAccount(user);
+		Map<String,HttpStatus> result =service.updateAccount(user);
 		return result;
 	}
 	
