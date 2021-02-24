@@ -17,7 +17,7 @@
         <file>${LOGS}/oauth2server.log</file>
         <encoder
             class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M\(%line\) - %msg%n]</Pattern>
+            <Pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M\(%line\) - %msg]%n</Pattern>
         </encoder>
 
         <rollingPolicy
