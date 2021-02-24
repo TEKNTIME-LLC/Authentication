@@ -1,24 +1,14 @@
-Check this URL: https://blog.marcosbarbero.com/centralized-authorization-jwt-spring-boot2/
-
 FOLLOW INSTRUCTION BELOW.
 
 install database: 
+create schema:
+-------------
   data base scripts are located at resources\data.sql
-  
-create schema
-create certificates
+  Data and scemal sql are renamed to .txt.
+     
 
-clientid is the username
-secret is the password 
-
-C:\projects\Java\jdk1.8.0_221\bin>curl -u clientId:secret -X POST localhost:9000/oauth/token -d grant_type=password -d username=user -d password=pass
-
-
-curl -u clientId:secret -X POST https://oauth.tekmlai.com/oauth2server/oauth/token -d grant_type=password -d username=user -d password=pass
-
-
-Data and scemal sql are renamed to .txt.
-
+create certificates:
+-------------------
 
 Public keys is required for resource
 command is
@@ -27,5 +17,39 @@ keytool -list -rfc --keystore keystore.jks | openssl x509 -inform pem -pubkey -n
 this required pubkey. download openssl
 
 
+TEST:
+----
+clientid is the username
+secret is the password 
+
+test in dev env:
+---------------
+curl -u clientId:secret -X POST localhost:9000/oauth/token -d grant_type=password -d username=user -d password=pass
+
+
+test in test env: (tekmlai.com)
+---------------
+curl -u clientId:secret -X POST https://oauth.tekmlai.com/oauth2server/oauth/token -d grant_type=password -d username=user -d password=pas
+
+
+Response:
+--------
+
+{
+  "access_token" : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTM5MzM5MzAsInVzZXJfbmFtZSI6InVzZXIiLCJqdGkiOiIyZDI5Mjg4MS0zMTk4LTRjNDEtOGYyZC00YjlhZjZmYTZmYTIiLCJjbGllbnRfaWQiOiJjbGllbnRJZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdfQ.Bn9RXKQU4Fc5dv6JjO3F1Ype1UQ3iSIVbsy4N7FMbZyv8Vzfh56OZM4fJqyFsmWR3X364fj45uF0BHQ9SnynR6bD2AWHQhmeWdiuAtKyG019q4IQ-LgdE9JsAe6nKSO4OQzYSb8G-ctR8SGT1suBLKoNk2aXkjRUolZ9Oaf-XW9Z6B-x-f6SqgoVN_vtn8LNMstQsTJP66ZbY0L0-1bloob17gVaq7x9TeZdhgW1KFiGyeZd11ifhkllxxSFmyJtLltfvsaR4dt4Q2vtalOEcEnKrKErpG8Admq3s4DkMncLwsQaB0-3Xeo5BflrBg6VlbEWA_qwvvZtgM6Di68cgg",
+  "token_type" : "bearer",
+  "refresh_token" : "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTY1MjU2MjksInVzZXJfbmFtZSI6InVzZXIiLCJqdGkiOiJiOTJhM2Y0Yy05ODA0LTQzNGQtOGEzOC0wODU1OTZlZjY4MTMiLCJjbGllbnRfaWQiOiJjbGllbnRJZCIsInNjb3BlIjpbInJlYWQiLCJ3cml0ZSJdLCJhdGkiOiIyZDI5Mjg4MS0zMTk4LTRjNDEtOGYyZC00YjlhZjZmYTZmYTIifQ.K6qqhRnW_Wt8Gdcae_AGaPXkczTb5kbxQS7imQ5yZEqXOSijCWjHCFz01CnKmY8WTEqafYywCzfntSnCMF4_EXPDzyLKwxHgyHit8m-WezJcza48i9RnDGWcCUBwNYOa7lox69uq6C2mMHbM1g2dPDltgHmlZU-TZg8K6030eedNg99SFyU7ZbFfpkFDZt24dD3VFRQeJj6pXQWt0UKPkelrcmWr_A7hi_w0fesJHI1kMnqvMcZaGOXZOuga1RSb4umU-zTArvDZLSS-pa3oMuFbMRCGrWwoIGByqEtvC2sklTbItknADTLqSc7tGwqYT9MC0Vu-HdkrZ9Si7951QA",
+  "expires_in" : 299,
+  "scope" : "read write",
+  "jti" : "2d292881-3198-4c41-8f2d-4b9af6fa6fa2"
+}
+
+From reponse copy token. 
+
 Query resource
 curl localhost:9100/me -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NDgxODk0NDUsInVzZXJfbmFtZSI6InVzZXIiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiYjFjYWQ3MTktZTkwMS00Njk5LTlhOWEtYTIwYzk2...."
+
+
+References:
+
+1. https://blog.marcosbarbero.com/centralized-authorization-jwt-spring-boot2/
