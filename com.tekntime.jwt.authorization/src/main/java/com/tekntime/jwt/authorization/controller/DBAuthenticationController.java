@@ -52,6 +52,7 @@ public class DBAuthenticationController {
 		userLogin.setPassword(authenticationRequest.getPassword());
 		Map<String,HttpStatus> result = userDetailsService.authenticate( userLogin);
 		if(result.containsValue(HttpStatus.UNAUTHORIZED)) {
+			logger.error("-->Authentication failed {}", result);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 		final String token = jwtTokenUtil.generateToken(userLogin);
@@ -66,8 +67,9 @@ public class DBAuthenticationController {
 		userLogin.setLoginName(userProfile.getLoginName());
 		userLogin.setToken(userProfile.getToken());
 		
-		Map<String,HttpStatus> result = userDetailsService.validateToken( userLogin);
+		Map<String,HttpStatus> result = userDetailsService.validateUser( userLogin);
 		if(result.containsValue(HttpStatus.UNAUTHORIZED)) {
+			logger.error("-->INVALID USER {}", result);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 
@@ -78,8 +80,8 @@ public class DBAuthenticationController {
 			user.setAuthorities(authorityService.loadByLoginId(user.getId()));
 			return ResponseEntity.ok(user);
 		}else {
-			logger.error("INVALID_CREDENTIALS");
-			throw new Exception("INVALID_CREDENTIALS");
+			logger.error("-->INVALID TOKEN");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
 		}
 		
 	}

@@ -36,7 +36,7 @@ public class TekntimeUserDetailsService {
 	   }
 	}
 	
-	public Map<String, HttpStatus> validateToken (UserLogin user) throws Exception {
+	public Map<String, HttpStatus> validateUser (UserLogin user) throws Exception {
 		final UserLogin userLogin =loadUserByLoginName(user.getLoginName());
 		  
 			Map<String,HttpStatus> result=userLogin.isValidAccount();
