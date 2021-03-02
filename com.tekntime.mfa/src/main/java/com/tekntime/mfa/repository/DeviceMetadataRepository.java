@@ -1,9 +1,9 @@
-package com.tekntime.mfa.persistence.dao;
+package com.tekntime.mfa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.tekntime.mfa.persistence.model.DeviceMetadata;
+import com.tekntime.mfa.model.DeviceMetadata;
 
 import java.util.List;
 

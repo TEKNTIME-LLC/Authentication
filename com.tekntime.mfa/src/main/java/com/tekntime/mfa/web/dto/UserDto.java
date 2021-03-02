@@ -7,6 +7,14 @@ import com.tekntime.mfa.validation.PasswordMatches;
 import com.tekntime.mfa.validation.ValidEmail;
 import com.tekntime.mfa.validation.ValidPassword;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Data
+@Getter 
+@Setter 
+@NoArgsConstructor
 @PasswordMatches
 public class UserDto {
     @NotNull
@@ -29,71 +37,16 @@ public class UserDto {
     @Size(min = 1, message = "{Size.userDto.email}")
     private String email;
 
-    private boolean isUsing2FA;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
+    private boolean isMFA;
+    
     private Integer role;
 
-    public Integer getRole() {
-        return role;
-    }
-
-    public void setRole(final Integer role) {
-        this.role = role;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(final String password) {
-        this.password = password;
-    }
-
-    public String getMatchingPassword() {
-        return matchingPassword;
-    }
-
-    public void setMatchingPassword(final String matchingPassword) {
-        this.matchingPassword = matchingPassword;
-    }
-
-    public boolean isUsing2FA() {
-        return isUsing2FA;
-    }
-
-    public void setUsing2FA(boolean isUsing2FA) {
-        this.isUsing2FA = isUsing2FA;
-    }
 
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("UserDto [firstName=").append(firstName).append(", lastName=").append(lastName).append(", password=").append(password).append(", matchingPassword=").append(matchingPassword).append(", email=").append(email).append(", isUsing2FA=")
-                .append(isUsing2FA).append(", role=").append(role).append("]");
+                .append(isMFA).append(", role=").append(role).append("]");
         return builder.toString();
     }
 

@@ -4,9 +4,9 @@ import com.google.common.base.Strings;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
-import com.tekntime.mfa.persistence.dao.DeviceMetadataRepository;
-import com.tekntime.mfa.persistence.model.DeviceMetadata;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.DeviceMetadata;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.repository.DeviceMetadataRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class DeviceService {
         this.messages = messages;
     }
 
-    public void verifyDevice(User user, HttpServletRequest request) throws IOException, GeoIp2Exception {
+    public void verifyDevice(UserLogin user, HttpServletRequest request) throws IOException, GeoIp2Exception {
 
         String ip = extractIp(request);
         String location = getIpLocation(ip);

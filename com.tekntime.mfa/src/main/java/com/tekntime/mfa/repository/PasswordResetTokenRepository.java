@@ -1,12 +1,12 @@
-package com.tekntime.mfa.persistence.dao;
+package com.tekntime.mfa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.tekntime.mfa.persistence.model.PasswordResetToken;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.PasswordResetToken;
+import com.tekntime.mfa.model.UserLogin;
 
 import java.util.Date;
 import java.util.stream.Stream;
@@ -16,7 +16,7 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 
     PasswordResetToken findByToken(String token);
 
-    PasswordResetToken findByUser(User user);
+    PasswordResetToken findByUser(UserLogin user);
 
     Stream<PasswordResetToken> findAllByExpiryDateLessThan(Date now);
 

@@ -1,4 +1,4 @@
-package com.tekntime.mfa.persistence.model;
+package com.tekntime.mfa.model;
 
 import javax.persistence.*;
 import java.util.Date;

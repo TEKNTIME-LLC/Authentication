@@ -8,8 +8,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
-import com.tekntime.mfa.persistence.dao.UserRepository;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.repository.UserRepository;
 
 //@Component
 public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
@@ -19,14 +19,14 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
-        final User user = userRepository.findByEmail(auth.getName());
+        final UserLogin user = userRepository.findByEmail(auth.getName());
         if ((user == null)) {
             throw new BadCredentialsException("Invalid username or password");
         }
         // to verify verification code
-        if (user.isUsing2FA()) {
+        if (user.isMFA()) {
             final String verificationCode = ((CustomWebAuthenticationDetails) auth.getDetails()).getVerificationCode();
-            final Totp totp = new Totp(user.getSecret());
+            final Totp totp = new Totp(user.getQrCodeSecret());
             if (!isValidLong(verificationCode) || !totp.verify(verificationCode)) {
                 throw new BadCredentialsException("Invalid verfication code");
             }

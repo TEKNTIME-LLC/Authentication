@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @PropertySource({ "classpath:persistence.properties" })
-@ComponentScan({ "com.tekntime.mfa.persistence" })
-@EnableJpaRepositories(basePackages = "com.tekntime.mfa.persistence.dao")
+@ComponentScan({ "com.tekntime.mfa" })
+@EnableJpaRepositories(basePackages = "com.tekntime.mfa")
 public class PersistenceJPAConfig {
 
     @Autowired
@@ -38,7 +38,7 @@ public class PersistenceJPAConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[] { "com.tekntime.mfa.persistence.model" });
+        em.setPackagesToScan(new String[] { "com.tekntime.mfa.repository.model" });
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
@@ -48,10 +48,10 @@ public class PersistenceJPAConfig {
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
+        dataSource.setDriverClassName(env.getProperty("spring.sql.driver"));
+        dataSource.setUrl(env.getProperty("spring.data.source.url"));
+        dataSource.setUsername(env.getProperty("spring.data.source.user"));
+        dataSource.setPassword(env.getProperty("spring.data.source.password"));
         return dataSource;
     }
 

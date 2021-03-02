@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tekntime.mfa.captcha.ICaptchaService;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.UserLogin;
 import com.tekntime.mfa.registration.OnRegistrationCompleteEvent;
 import com.tekntime.mfa.service.IUserService;
 import com.tekntime.mfa.web.dto.UserDto;
@@ -47,7 +47,7 @@ public class RegistrationCaptchaController {
 
         LOGGER.debug("Registering user account with information: {}", accountDto);
 
-        final User registered = userService.registerNewUserAccount(accountDto);
+        final UserLogin registered = userService.registerNewUserAccount(accountDto);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
         return new GenericResponse("success");
     }

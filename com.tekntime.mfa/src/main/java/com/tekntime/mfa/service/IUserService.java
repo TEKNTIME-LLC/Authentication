@@ -4,47 +4,47 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
-import com.tekntime.mfa.persistence.model.PasswordResetToken;
-import com.tekntime.mfa.persistence.model.User;
-import com.tekntime.mfa.persistence.model.VerificationToken;
+import com.tekntime.mfa.model.PasswordResetToken;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.model.VerificationToken;
 import com.tekntime.mfa.web.dto.UserDto;
 import com.tekntime.mfa.web.error.UserAlreadyExistException;
 
 public interface IUserService {
 
-    User registerNewUserAccount(UserDto accountDto) throws UserAlreadyExistException;
+    UserLogin registerNewUserAccount(UserDto accountDto) throws UserAlreadyExistException;
 
-    User getUser(String verificationToken);
+    UserLogin getUser(String verificationToken);
 
-    void saveRegisteredUser(User user);
+    void saveRegisteredUser(UserLogin user);
 
-    void deleteUser(User user);
+    void deleteUser(UserLogin user);
 
-    void createVerificationTokenForUser(User user, String token);
+    void createVerificationTokenForUser(UserLogin user, String token);
 
     VerificationToken getVerificationToken(String VerificationToken);
 
     VerificationToken generateNewVerificationToken(String token);
 
-    void createPasswordResetTokenForUser(User user, String token);
+    void createPasswordResetTokenForUser(UserLogin user, String token);
 
-    User findUserByEmail(String email);
+    UserLogin findUserByEmail(String email);
 
     PasswordResetToken getPasswordResetToken(String token);
 
-    User getUserByPasswordResetToken(String token);
+    UserLogin getUserByPasswordResetToken(String token);
 
-    Optional<User> getUserByID(long id);
+    Optional<UserLogin> getUserByID(long id);
 
-    void changeUserPassword(User user, String password);
+    void changeUserPassword(UserLogin user, String password);
 
-    boolean checkIfValidOldPassword(User user, String password);
+    boolean checkIfValidOldPassword(UserLogin user, String password);
 
     String validateVerificationToken(String token);
 
-    String generateQRUrl(User user) throws UnsupportedEncodingException;
+    String generateQRUrl(UserLogin user) throws UnsupportedEncodingException;
 
-    User updateUser2FA(boolean use2FA);
+    UserLogin updateUser2FA(boolean use2FA);
 
     List<Object> getUsersFromSessionRegistry();
 

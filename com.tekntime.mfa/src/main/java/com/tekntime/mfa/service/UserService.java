@@ -19,13 +19,13 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.tekntime.mfa.persistence.dao.PasswordResetTokenRepository;
-import com.tekntime.mfa.persistence.dao.RoleRepository;
-import com.tekntime.mfa.persistence.dao.UserRepository;
-import com.tekntime.mfa.persistence.dao.VerificationTokenRepository;
-import com.tekntime.mfa.persistence.model.PasswordResetToken;
-import com.tekntime.mfa.persistence.model.User;
-import com.tekntime.mfa.persistence.model.VerificationToken;
+import com.tekntime.mfa.model.PasswordResetToken;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.model.VerificationToken;
+import com.tekntime.mfa.repository.PasswordResetTokenRepository;
+import com.tekntime.mfa.repository.RoleRepository;
+import com.tekntime.mfa.repository.UserRepository;
+import com.tekntime.mfa.repository.VerificationTokenRepository;
 import com.tekntime.mfa.web.dto.UserDto;
 import com.tekntime.mfa.web.error.UserAlreadyExistException;
 
@@ -61,23 +61,23 @@ public class UserService implements IUserService {
     // API
 
    
-    public User registerNewUserAccount(final UserDto accountDto) {
+    public UserLogin registerNewUserAccount(final UserDto accountDto) {
         if (emailExists(accountDto.getEmail())) {
             throw new UserAlreadyExistException("There is an account with that email adress: " + accountDto.getEmail());
         }
-        final User user = new User();
+        final UserLogin user = new UserLogin();
 
         user.setFirstName(accountDto.getFirstName());
         user.setLastName(accountDto.getLastName());
         user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         user.setEmail(accountDto.getEmail());
-        user.setUsing2FA(accountDto.isUsing2FA());
+        user.setMFA(accountDto.isMFA());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return userRepository.save(user);
     }
 
     
-    public User getUser(final String verificationToken) {
+    public UserLogin getUser(final String verificationToken) {
         final VerificationToken token = tokenRepository.findByToken(verificationToken);
         if (token != null) {
             return token.getUser();
@@ -91,12 +91,12 @@ public class UserService implements IUserService {
     }
 
     
-    public void saveRegisteredUser(final User user) {
+    public void saveRegisteredUser(final UserLogin user) {
         userRepository.save(user);
     }
 
     
-    public void deleteUser(final User user) {
+    public void deleteUser(final UserLogin user) {
         final VerificationToken verificationToken = tokenRepository.findByUser(user);
 
         if (verificationToken != null) {
@@ -113,7 +113,7 @@ public class UserService implements IUserService {
     }
 
     
-    public void createVerificationTokenForUser(final User user, final String token) {
+    public void createVerificationTokenForUser(final UserLogin user, final String token) {
         final VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
     }
@@ -128,13 +128,13 @@ public class UserService implements IUserService {
     }
 
     
-    public void createPasswordResetTokenForUser(final User user, final String token) {
+    public void createPasswordResetTokenForUser(final UserLogin user, final String token) {
         final PasswordResetToken myToken = new PasswordResetToken(token, user);
         passwordTokenRepository.save(myToken);
     }
 
     
-    public User findUserByEmail(final String email) {
+    public UserLogin findUserByEmail(final String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -144,24 +144,24 @@ public class UserService implements IUserService {
     }
 
     
-    public User getUserByPasswordResetToken(final String token) {
+    public UserLogin getUserByPasswordResetToken(final String token) {
         return passwordTokenRepository.findByToken(token)
             .getUser();
     }
 
     
-    public Optional<User> getUserByID(final long id) {
+    public Optional<UserLogin> getUserByID(final long id) {
         return userRepository.findById(id);
     }
 
     
-    public void changeUserPassword(final User user, final String password) {
+    public void changeUserPassword(final UserLogin user, final String password) {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
 
     
-    public boolean checkIfValidOldPassword(final User user, final String oldPassword) {
+    public boolean checkIfValidOldPassword(final UserLogin user, final String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
@@ -172,7 +172,7 @@ public class UserService implements IUserService {
             return TOKEN_INVALID;
         }
 
-        final User user = verificationToken.getUser();
+        final UserLogin user = verificationToken.getUser();
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate()
             .getTime()
@@ -182,23 +182,23 @@ public class UserService implements IUserService {
             return TOKEN_EXPIRED;
         }
 
-        user.setEnabled(true);
+        user.setActive(true);
         // tokenRepository.delete(verificationToken);
         userRepository.save(user);
         return TOKEN_VALID;
     }
 
     
-    public String generateQRUrl(User user) throws UnsupportedEncodingException {
-        return QR_PREFIX + URLEncoder.encode(String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", APP_NAME, user.getEmail(), user.getSecret(), APP_NAME), "UTF-8");
+    public String generateQRUrl(UserLogin user) throws UnsupportedEncodingException {
+        return QR_PREFIX + URLEncoder.encode(String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", APP_NAME, user.getEmail(), user.getQrCodeSecret(), APP_NAME), "UTF-8");
     }
 
     
-    public User updateUser2FA(boolean use2FA) {
+    public UserLogin updateUser2FA(boolean use2FA) {
         final Authentication curAuth = SecurityContextHolder.getContext()
             .getAuthentication();
-        User currentUser = (User) curAuth.getPrincipal();
-        currentUser.setUsing2FA(use2FA);
+        UserLogin currentUser = (UserLogin) curAuth.getPrincipal();
+        currentUser.setMFA(use2FA);
         currentUser = userRepository.save(currentUser);
         final Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), curAuth.getAuthorities());
         SecurityContextHolder.getContext()
@@ -217,8 +217,8 @@ public class UserService implements IUserService {
             .filter((u) -> !sessionRegistry.getAllSessions(u, false)
                 .isEmpty())
             .map(o -> {
-                if (o instanceof User) {
-                    return ((User) o).getEmail();
+                if (o instanceof UserLogin) {
+                    return ((UserLogin) o).getEmail();
                 } else {
                     return o.toString();
                 }

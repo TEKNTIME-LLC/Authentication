@@ -12,12 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tekntime.mfa.persistence.dao.PrivilegeRepository;
-import com.tekntime.mfa.persistence.dao.RoleRepository;
-import com.tekntime.mfa.persistence.dao.UserRepository;
-import com.tekntime.mfa.persistence.model.Privilege;
-import com.tekntime.mfa.persistence.model.Role;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.Authority;
+import com.tekntime.mfa.model.Privilege;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.repository.PrivilegeRepository;
+import com.tekntime.mfa.repository.RoleRepository;
+import com.tekntime.mfa.repository.UserRepository;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -53,11 +53,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         // == create initial roles
         final List<Privilege> adminPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege));
         final List<Privilege> userPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, passwordPrivilege));
-        final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        final Authority adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", userPrivileges);
 
         // == create initial user
-        createUserIfNotFound("test@test.com", "Test", "Test", "test", new ArrayList<Role>(Arrays.asList(adminRole)));
+        createUserIfNotFound("test@test.com", "Test", "Test", "test", new ArrayList<Authority>(Arrays.asList(adminRole)));
 
         alreadySetup = true;
     }
@@ -73,10 +73,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    private final Role createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
-        Role role = roleRepository.findByName(name);
+    private final Authority createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
+        Authority role = roleRepository.findByName(name);
         if (role == null) {
-            role = new Role(name);
+            role = new Authority(name);
         }
         role.setPrivileges(privileges);
         role = roleRepository.save(role);
@@ -84,15 +84,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    private final User createUserIfNotFound(final String email, final String firstName, final String lastName, final String password, final Collection<Role> roles) {
-        User user = userRepository.findByEmail(email);
+    private final UserLogin createUserIfNotFound(final String email, final String firstName, final String lastName, final String password, final Collection<Authority> roles) {
+        UserLogin user = userRepository.findByEmail(email);
         if (user == null) {
-            user = new User();
+            user = new UserLogin();
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setPassword(passwordEncoder.encode(password));
             user.setEmail(email);
-            user.setEnabled(true);
+            user.setActive(true);
         }
         user.setRoles(roles);
         user = userRepository.save(user);

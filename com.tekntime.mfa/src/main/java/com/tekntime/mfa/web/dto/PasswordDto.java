@@ -2,6 +2,14 @@ package com.tekntime.mfa.web.dto;
 
 import com.tekntime.mfa.validation.ValidPassword;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Data
+@Getter 
+@Setter 
+@NoArgsConstructor
 public class PasswordDto {
 
     private String oldPassword;
@@ -9,20 +17,4 @@ public class PasswordDto {
     @ValidPassword
     private String newPassword;
 
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
-}
+  }

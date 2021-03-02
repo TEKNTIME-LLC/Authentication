@@ -12,9 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.tekntime.mfa.persistence.dao.PasswordResetTokenRepository;
-import com.tekntime.mfa.persistence.model.PasswordResetToken;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.PasswordResetToken;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.repository.PasswordResetTokenRepository;
 
 @Service
 @Transactional
@@ -36,7 +36,7 @@ public class UserSecurityService implements ISecurityUserService {
             return "expired";
         }
 
-        final User user = passToken.getUser();
+        final UserLogin user = passToken.getUser();
         final Authentication auth = new UsernamePasswordAuthenticationToken(user, null, Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
         SecurityContextHolder.getContext().setAuthentication(auth);
         return null;

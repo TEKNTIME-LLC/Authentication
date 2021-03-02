@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.rememberme.PersistentReme
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import com.tekntime.mfa.persistence.dao.UserRepository;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.repository.UserRepository;
 
 public class CustomRememberMeServices extends PersistentTokenBasedRememberMeServices {
 
@@ -40,7 +40,7 @@ public class CustomRememberMeServices extends PersistentTokenBasedRememberMeServ
 
     @Override
     protected void onLoginSuccess(HttpServletRequest request, HttpServletResponse response, Authentication successfulAuthentication) {
-        String username = ((User) successfulAuthentication.getPrincipal()).getEmail();
+        String username = ((UserLogin) successfulAuthentication.getPrincipal()).getEmail();
         logger.debug("Creating new persistent login for user " + username);
         PersistentRememberMeToken persistentToken = new PersistentRememberMeToken(username, generateSeriesData(), generateTokenData(), new Date());
         try {
@@ -53,7 +53,7 @@ public class CustomRememberMeServices extends PersistentTokenBasedRememberMeServ
 
     @Override
     protected Authentication createSuccessfulAuthentication(HttpServletRequest request, UserDetails user) {
-        User auser = userRepository.findByEmail(user.getUsername());
+        UserLogin auser = userRepository.findByEmail(user.getUsername());
         RememberMeAuthenticationToken auth = new RememberMeAuthenticationToken(key, auser, authoritiesMapper.mapAuthorities(user.getAuthorities()));
         auth.setDetails(authenticationDetailsSource.buildDetails(request));
         return auth;

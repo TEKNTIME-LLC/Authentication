@@ -10,7 +10,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.UserLogin;
 import com.tekntime.mfa.registration.OnRegistrationCompleteEvent;
 import com.tekntime.mfa.service.IUserService;
 
@@ -35,7 +35,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     }
 
     private void confirmRegistration(final OnRegistrationCompleteEvent event) {
-        final User user = event.getUser();
+        final UserLogin user = event.getUser();
         final String token = UUID.randomUUID().toString();
         service.createVerificationTokenForUser(user, token);
 
@@ -45,7 +45,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     //
 
-    private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) {
+    private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final UserLogin user, final String token) {
         final String recipientAddress = user.getEmail();
         final String subject = "Registration Confirmation";
         final String confirmationUrl = event.getAppUrl() + "/registrationConfirm.html?token=" + token;

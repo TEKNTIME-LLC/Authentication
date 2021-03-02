@@ -1,12 +1,12 @@
-package com.tekntime.mfa.persistence.dao;
+package com.tekntime.mfa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.tekntime.mfa.persistence.model.User;
-import com.tekntime.mfa.persistence.model.VerificationToken;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.model.VerificationToken;
 
 import java.util.Date;
 import java.util.stream.Stream;
@@ -16,7 +16,7 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
 
     VerificationToken findByToken(String token);
 
-    VerificationToken findByUser(User user);
+    VerificationToken findByUser(UserLogin user);
 
     Stream<VerificationToken> findAllByExpiryDateLessThan(Date now);
 

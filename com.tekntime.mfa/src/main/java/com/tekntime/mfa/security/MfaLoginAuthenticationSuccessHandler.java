@@ -15,7 +15,7 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.UserLogin;
 
 @Component("mfaAuthenticationSuccessHandler")
 public class MfaLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -33,8 +33,8 @@ public class MfaLoginAuthenticationSuccessHandler implements AuthenticationSucce
         if (session != null) {
             session.setMaxInactiveInterval(30 * 60);
             String username;
-            if (authentication.getPrincipal() instanceof User) {
-            	username = ((User)authentication.getPrincipal()).getEmail();
+            if (authentication.getPrincipal() instanceof UserLogin) {
+            	username = ((UserLogin)authentication.getPrincipal()).getEmail();
             }
             else {
             	username = authentication.getName();
@@ -47,7 +47,7 @@ public class MfaLoginAuthenticationSuccessHandler implements AuthenticationSucce
     }
 
     private String gerUserName(final Authentication authentication) {
-        return ((User) authentication.getPrincipal()).getFirstName();
+        return ((UserLogin) authentication.getPrincipal()).getFirstName();
     }
 
     private void addWelcomeCookie(final String user, final HttpServletResponse response) {

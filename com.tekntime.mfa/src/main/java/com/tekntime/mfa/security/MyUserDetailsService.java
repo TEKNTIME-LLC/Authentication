@@ -15,10 +15,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tekntime.mfa.persistence.dao.UserRepository;
-import com.tekntime.mfa.persistence.model.Privilege;
-import com.tekntime.mfa.persistence.model.Role;
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.Authority;
+import com.tekntime.mfa.model.Privilege;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.repository.UserRepository;
 
 @Service("userDetailsService")
 @Transactional
@@ -46,12 +46,12 @@ public class MyUserDetailsService implements UserDetailsService {
         }
 
         try {
-            final User user = userRepository.findByEmail(email);
+            final UserLogin user = userRepository.findByEmail(email);
             if (user == null) {
                 throw new UsernameNotFoundException("No user found with username: " + email);
             }
 
-            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, getAuthorities(user.getRoles()));
+            return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user.isActive(), true, true, true, getAuthorities(user.getRoles()));
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -59,14 +59,14 @@ public class MyUserDetailsService implements UserDetailsService {
 
     // UTIL
 
-    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles) {
+    private final Collection<? extends GrantedAuthority> getAuthorities(final Collection<Authority> roles) {
         return getGrantedAuthorities(getPrivileges(roles));
     }
 
-    private final List<String> getPrivileges(final Collection<Role> roles) {
+    private final List<String> getPrivileges(final Collection<Authority> roles) {
         final List<String> privileges = new ArrayList<String>();
         final List<Privilege> collection = new ArrayList<Privilege>();
-        for (final Role role : roles) {
+        for (final Authority role : roles) {
             collection.addAll(role.getPrivileges());
         }
         for (final Privilege item : collection) {

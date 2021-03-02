@@ -11,7 +11,7 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.tekntime.mfa.persistence.model.User;
+import com.tekntime.mfa.model.UserLogin;
 import com.tekntime.mfa.service.DeviceService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,8 +39,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
             session.setMaxInactiveInterval(30 * 60);
 
             String username;
-            if (authentication.getPrincipal() instanceof User) {
-            	username = ((User)authentication.getPrincipal()).getEmail();
+            if (authentication.getPrincipal() instanceof UserLogin) {
+            	username = ((UserLogin)authentication.getPrincipal()).getEmail();
             }
             else {
             	username = authentication.getName();
@@ -55,8 +55,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
     private void loginNotification(Authentication authentication, HttpServletRequest request) {
         try {
-            if (authentication.getPrincipal() instanceof User) {
-                deviceService.verifyDevice(((User)authentication.getPrincipal()), request);
+            if (authentication.getPrincipal() instanceof UserLogin) {
+                deviceService.verifyDevice(((UserLogin)authentication.getPrincipal()), request);
             }
         } catch (Exception e) {
             logger.error("An error occurred while verifying device or location", e);
@@ -90,8 +90,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         }
         if (isUser) {
         	 String username;
-             if (authentication.getPrincipal() instanceof User) {
-             	username = ((User)authentication.getPrincipal()).getEmail();
+             if (authentication.getPrincipal() instanceof UserLogin) {
+             	username = ((UserLogin)authentication.getPrincipal()).getEmail();
              }
              else {
              	username = authentication.getName();

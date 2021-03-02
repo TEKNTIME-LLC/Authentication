@@ -5,8 +5,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tekntime.mfa.persistence.dao.PasswordResetTokenRepository;
-import com.tekntime.mfa.persistence.dao.VerificationTokenRepository;
+import com.tekntime.mfa.repository.PasswordResetTokenRepository;
+import com.tekntime.mfa.repository.VerificationTokenRepository;
 
 import java.time.Instant;
 import java.util.Date;

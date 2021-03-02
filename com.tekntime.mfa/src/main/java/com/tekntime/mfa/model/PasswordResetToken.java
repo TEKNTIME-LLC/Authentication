@@ -1,4 +1,4 @@
-package com.tekntime.mfa.persistence.model;
+package com.tekntime.mfa.model;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,9 +22,9 @@ public class PasswordResetToken {
 
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = UserLogin.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    private UserLogin user;
 
     private Date expiryDate;
 
@@ -39,7 +39,7 @@ public class PasswordResetToken {
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 
-    public PasswordResetToken(final String token, final User user) {
+    public PasswordResetToken(final String token, final UserLogin user) {
         super();
 
         this.token = token;
@@ -60,11 +60,11 @@ public class PasswordResetToken {
         this.token = token;
     }
 
-    public User getUser() {
+    public UserLogin getUser() {
         return user;
     }
 
-    public void setUser(final User user) {
+    public void setUser(final UserLogin user) {
         this.user = user;
     }
 

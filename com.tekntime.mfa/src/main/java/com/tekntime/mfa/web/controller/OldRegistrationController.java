@@ -30,9 +30,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tekntime.mfa.persistence.model.PasswordResetToken;
-import com.tekntime.mfa.persistence.model.User;
-import com.tekntime.mfa.persistence.model.VerificationToken;
+import com.tekntime.mfa.model.PasswordResetToken;
+import com.tekntime.mfa.model.UserLogin;
+import com.tekntime.mfa.model.VerificationToken;
 import com.tekntime.mfa.registration.OnRegistrationCompleteEvent;
 import com.tekntime.mfa.service.IUserService;
 import com.tekntime.mfa.web.dto.UserDto;
@@ -85,7 +85,7 @@ public class OldRegistrationController {
             return "redirect:/badUser.html?lang=" + locale.getLanguage();
         }
 
-        final User user = verificationToken.getUser();
+        final UserLogin user = verificationToken.getUser();
         final Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             model.addAttribute("message", messages.getMessage("auth.message.expired", null, locale));
@@ -94,7 +94,7 @@ public class OldRegistrationController {
             return "redirect:/badUser.html?lang=" + locale.getLanguage();
         }
 
-        user.setEnabled(true);
+        user.setActive(true);
         userService.saveRegisteredUser(user);
         model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
         return "redirect:/login.html?lang=" + locale.getLanguage();
@@ -104,7 +104,7 @@ public class OldRegistrationController {
     public ModelAndView registerUserAccount(@ModelAttribute("user") @Valid final UserDto userDto, final HttpServletRequest request, final Errors errors) {
         LOGGER.debug("Registering user account with information: {}", userDto);
 
-        final User registered = userService.registerNewUserAccount(userDto);
+        final UserLogin registered = userService.registerNewUserAccount(userDto);
         if (registered == null) {
             // result.rejectValue("email", "message.regError");
             return new ModelAndView("registration", "user", userDto);
@@ -123,7 +123,7 @@ public class OldRegistrationController {
     public String resendRegistrationToken(final HttpServletRequest request, final Model model, @RequestParam("token") final String existingToken) {
         final Locale locale = request.getLocale();
         final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
-        final User user = userService.getUser(newToken.getToken());
+        final UserLogin user = userService.getUser(newToken.getToken());
         try {
             final String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
             final SimpleMailMessage email = constructResetVerificationTokenEmail(appUrl, request.getLocale(), newToken, user);
@@ -142,7 +142,7 @@ public class OldRegistrationController {
 
     @RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
     public String resetPassword(final HttpServletRequest request, final Model model, @RequestParam("email") final String userEmail) {
-        final User user = userService.findUserByEmail(userEmail);
+        final UserLogin user = userService.findUserByEmail(userEmail);
         if (user == null) {
             model.addAttribute("message", messages.getMessage("message.userNotFound", null, request.getLocale()));
             return "redirect:/login.html?lang=" + request.getLocale().getLanguage();
@@ -171,7 +171,7 @@ public class OldRegistrationController {
         final Locale locale = request.getLocale();
 
         final PasswordResetToken passToken = userService.getPasswordResetToken(token);
-        final User user = passToken.getUser();
+        final UserLogin user = passToken.getUser();
         if ((passToken == null) || (user.getId() != id)) {
             final String message = messages.getMessage("auth.message.invalidToken", null, locale);
             model.addAttribute("message", message);
@@ -195,7 +195,7 @@ public class OldRegistrationController {
     public String savePassword(final HttpServletRequest request, final Model model, @RequestParam("password") final String password) {
         final Locale locale = request.getLocale();
 
-        final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final UserLogin user = (UserLogin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.changeUserPassword(user, password);
         model.addAttribute("message", messages.getMessage("message.resetPasswordSuc", null, locale));
         return "redirect:/login.html?lang=" + locale;
@@ -203,7 +203,7 @@ public class OldRegistrationController {
 
     // NON-API
 
-    private final SimpleMailMessage constructResetVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {
+    private final SimpleMailMessage constructResetVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final UserLogin user) {
         final String confirmationUrl = contextPath + "/old/registrationConfirm.html?token=" + newToken.getToken();
         final String message = messages.getMessage("message.resendToken", null, locale);
         final SimpleMailMessage email = new SimpleMailMessage();
@@ -214,7 +214,7 @@ public class OldRegistrationController {
         return email;
     }
 
-    private final SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final User user) {
+    private final SimpleMailMessage constructResetTokenEmail(final String contextPath, final Locale locale, final String token, final UserLogin user) {
         final String url = contextPath + "/old/user/changePassword?id=" + user.getId() + "&token=" + token;
         final String message = messages.getMessage("message.resetPassword", null, locale);
         final SimpleMailMessage email = new SimpleMailMessage();

@@ -1,4 +1,4 @@
-package com.tekntime.mfa.persistence.model;
+package com.tekntime.mfa.model;
 
 import java.util.Collection;
 
@@ -10,15 +10,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Data
+@Getter 
+@Setter 
+@NoArgsConstructor
 @Entity
-public class Role {
+public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    private Collection<UserLogin> users;
 
     @ManyToMany
     @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
@@ -26,48 +34,14 @@ public class Role {
 
     private String name;
 
-    public Role() {
-        super();
-    }
 
-    public Role(final String name) {
+
+    public Authority(final String name) {
         super();
         this.name = name;
     }
 
-    //
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(final Collection<User> users) {
-        this.users = users;
-    }
-
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(final Collection<Privilege> privileges) {
-        this.privileges = privileges;
-    }
+   
 
     @Override
     public int hashCode() {
@@ -88,7 +62,7 @@ public class Role {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Role role = (Role) obj;
+        final Authority role = (Authority) obj;
         if (!name.equals(role.name)) {
             return false;
         }
