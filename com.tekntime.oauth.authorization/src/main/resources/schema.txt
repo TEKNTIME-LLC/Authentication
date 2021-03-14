@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS oauth_code (
   code VARCHAR(256), authentication BLOB
 );
 
+/*
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(256) NOT NULL,
@@ -50,6 +51,39 @@ CREATE TABLE IF NOT EXISTS users (
   accountNonLocked bit,
   UNIQUE KEY unique_username(username)
 );
+*/
+
+---- MYSQL
+
+CREATE TABLE dbo.userLogin(
+	id int NOT NULL,
+	loginName varchar(50) NOT NULL,
+	firstName varchar(50) NOT NULL,
+	lastName varchar(50) NOT NULL,
+	middleInitial varchar(50) NULL,
+	password varchar(2000) NOT NULL,
+	createDate datetime NOT NULL,
+	updateDate datetime  NOT NULL,
+	expiryDate datetime NULL,
+	isActive bit , 
+	isLocked bit ,
+	lastLoginDate datetime NULL,
+	loginAttempt int NULL,
+	isDeleted bit ,
+	email varchar(50)  NOT NULL,
+	phone numeric(18, 0) NULL,
+	addressLine1 varchar(50) NULL,
+	addressLine2 varchar(50) NULL,
+	city varchar(50) NULL,
+	state varchar(50) NULL,
+	zipCode varchar(18) NULL,
+	isEmailNotification bit NULL,
+	isTextMessageNotification bit NULL,
+	isMFA  bit NULL,
+	qrCodeSecret varchar(50),
+	hashType varchar(25) NULL
+)
+
 
 
 

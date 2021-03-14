@@ -32,6 +32,8 @@ CREATE TABLE [dbo].[userLogin](
 	[zipCode] [numeric](18, 0) NULL,
 	[isEmailNotification] [bit] NULL,
 	[isTextMessageNotification] [bit] NULL,
+	[isMFA]  bit NULL,
+	[qrCodeSecret] varchar(50),
 	[hashType] [varchar](25) NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -44,20 +46,20 @@ GO
 
 CREATE TABLE dbo.userLogin(
 	id int NOT NULL,
-	loginName varchar(50) NULL,
-	firstName varchar(50) NULL,
-	lastName varchar(50) NULL,
+	loginName varchar(50) NOT NULL,
+	firstName varchar(50) NOT NULL,
+	lastName varchar(50) NOT NULL,
 	middleInitial varchar(50) NULL,
-	password varchar(2000) NULL,
-	createDate datetime NULL,
-	updateDate datetime NULL,
+	password varchar(2000) NOT NULL,
+	createDate datetime NOT NULL,
+	updateDate datetime  NOT NULL,
 	expiryDate datetime NULL,
-	isActive bit NULL,
-	isLocked bit NULL,
+	isActive bit , 
+	isLocked bit ,
 	lastLoginDate datetime NULL,
 	loginAttempt int NULL,
-	isDeleted bit NULL,
-	email varchar(50) NULL,
+	isDeleted bit ,
+	email varchar(50)  NOT NULL,
 	phone numeric(18, 0) NULL,
 	addressLine1 varchar(50) NULL,
 	addressLine2 varchar(50) NULL,
@@ -66,6 +68,8 @@ CREATE TABLE dbo.userLogin(
 	zipCode varchar(18) NULL,
 	isEmailNotification bit NULL,
 	isTextMessageNotification bit NULL,
+	isMFA  bit NULL,
+	qrCodeSecret varchar(50),
 	hashType varchar(25) NULL
 )
 
