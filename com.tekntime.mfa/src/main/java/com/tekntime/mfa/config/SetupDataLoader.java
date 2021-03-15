@@ -16,7 +16,7 @@ import com.tekntime.mfa.model.Authority;
 import com.tekntime.mfa.model.Privilege;
 import com.tekntime.mfa.model.UserLogin;
 import com.tekntime.mfa.repository.PrivilegeRepository;
-import com.tekntime.mfa.repository.RoleRepository;
+import com.tekntime.mfa.repository.AuthorityRepository;
 import com.tekntime.mfa.repository.UserRepository;
 
 @Component
@@ -28,7 +28,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private AuthorityRepository roleRepository;
 
     @Autowired
     private PrivilegeRepository privilegeRepository;

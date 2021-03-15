@@ -1,12 +1,10 @@
 package com.tekntime.mfa.model;
 
-import java.util.Collection;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.Getter;
@@ -16,7 +14,8 @@ import lombok.Setter;
 @Getter 
 @Setter 
 @NoArgsConstructor
-@Entity
+@Entity(name = "privilege")
+@Table(name = "privilege")
 public class Privilege {
 
     @Id
@@ -25,8 +24,6 @@ public class Privilege {
 
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Authority> roles;
 
     public Privilege(String name) {
     	this.name=name;

@@ -23,7 +23,7 @@ import com.tekntime.mfa.model.PasswordResetToken;
 import com.tekntime.mfa.model.UserLogin;
 import com.tekntime.mfa.model.VerificationToken;
 import com.tekntime.mfa.repository.PasswordResetTokenRepository;
-import com.tekntime.mfa.repository.RoleRepository;
+import com.tekntime.mfa.repository.AuthorityRepository;
 import com.tekntime.mfa.repository.UserRepository;
 import com.tekntime.mfa.repository.VerificationTokenRepository;
 import com.tekntime.mfa.web.dto.UserDto;
@@ -46,7 +46,7 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private AuthorityRepository roleRepository;
 
     @Autowired
     private SessionRegistry sessionRegistry;

@@ -73,4 +73,20 @@ CREATE TABLE dbo.userLogin(
 	hashType varchar(25) NULL
 )
 
+// THIS IS FOR MFA
+CREATE TABLE dbo.deviceMetadata(
+	id int NOT NULL,
+	userId int NOT NULL,
+	deviceDetails varchar(50) NOT NULL,
+	location varchar(50) NOT NULL,
+	lastLoggedIn datetime NOT NULL
+)
+
+
+// THIS IS FOR MFA
+CREATE TABLE privilege(
+	id int NOT NULL,
+	name varchar(50) NOT NULL
+)
+
 

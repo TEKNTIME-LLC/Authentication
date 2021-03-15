@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.tekntime.mfa.model.Authority;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Authority, Long> {
+public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 
     Authority findByName(String name);
 

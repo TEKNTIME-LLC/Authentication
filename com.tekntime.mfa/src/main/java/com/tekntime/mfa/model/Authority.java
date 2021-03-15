@@ -6,9 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.Getter;
@@ -18,27 +17,30 @@ import lombok.Setter;
 @Getter 
 @Setter 
 @NoArgsConstructor
-@Entity
+@Entity(name = "authorities")
+@Table(name = "authorities")
 public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<UserLogin> users;
-
-    @ManyToMany
-    @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
+   // @ManyToMany(mappedBy = "roles")
+   // private Collection<UserLogin> users;
+    private int userid;
+    
+    private String username;
+    
+    @Transient
     private Collection<Privilege> privileges;
 
-    private String name;
+    private String authority;
 
 
 
     public Authority(final String name) {
         super();
-        this.name = name;
+        this.authority = name;
     }
 
    
@@ -47,7 +49,7 @@ public class Authority {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((authority == null) ? 0 : authority.hashCode());
         return result;
     }
 
@@ -63,7 +65,7 @@ public class Authority {
             return false;
         }
         final Authority role = (Authority) obj;
-        if (!name.equals(role.name)) {
+        if (!authority.equals(role.authority)) {
             return false;
         }
         return true;
@@ -72,7 +74,7 @@ public class Authority {
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
-        builder.append("Role [name=").append(name).append("]").append("[id=").append(id).append("]");
+        builder.append("Role [name=").append(authority).append("]").append("[id=").append(id).append("]");
         return builder.toString();
     }
 }

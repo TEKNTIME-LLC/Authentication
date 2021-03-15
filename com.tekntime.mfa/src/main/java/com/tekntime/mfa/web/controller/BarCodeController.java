@@ -22,13 +22,15 @@ public class BarCodeController {
 	@Autowired
 	private BarCodeGeneratorService service;
 
-	@GetMapping(value = "/barbecue/ean13/{barcode}", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<BufferedImage> barbecueBarcode(@PathVariable("barcode") String barcode) throws Exception {
-        return ResponseEntity.ok(service.generateBarcodeImage(barcode));
+	@GetMapping(value = "/ean13/{barcodeText}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<BufferedImage> barbecueBarcode(@PathVariable("barcodeText") String barcodeText) throws Exception {
+		LOGGER.info("Generate barcode :{}", barcodeText);
+        return ResponseEntity.ok(service.generateBarcodeImage(barcodeText));
     }
 	
-	@GetMapping(value = "/barbecue/qrcode/{barcode}")
-    public ResponseEntity<BufferedImage> qrBarcode(@PathVariable("barcode") String barcode) throws Exception {
-        return ResponseEntity.ok(service.generateQRCodeImage(barcode));
+	@GetMapping(value = "/qrcode/{qrCodeText}")
+    public ResponseEntity<BufferedImage> qrBarcode(@PathVariable("qrCodeText") String qrCodeText) throws Exception {
+		LOGGER.info("Generate QR code {}", qrCodeText );
+        return ResponseEntity.ok(service.generateQRCodeImage(qrCodeText));
     }
 }

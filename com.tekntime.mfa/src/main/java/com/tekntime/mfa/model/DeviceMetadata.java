@@ -1,10 +1,24 @@
 package com.tekntime.mfa.model;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
-@Entity
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Data
+@Getter 
+@Setter 
+@NoArgsConstructor
+@Entity(name = "deviceMetadata")
+@Table(name = "deviceMetadata")
 public class DeviceMetadata {
 
     @Id
@@ -15,45 +29,6 @@ public class DeviceMetadata {
     private String location;
     private Date lastLoggedIn;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getDeviceDetails() {
-        return deviceDetails;
-    }
-
-    public void setDeviceDetails(String deviceDetails) {
-        this.deviceDetails = deviceDetails;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Date getLastLoggedIn() {
-        return lastLoggedIn;
-    }
-
-    public void setLastLoggedIn(Date lastLoggedIn) {
-        this.lastLoggedIn = lastLoggedIn;
-    }
 
     @Override
     public boolean equals(Object o) {

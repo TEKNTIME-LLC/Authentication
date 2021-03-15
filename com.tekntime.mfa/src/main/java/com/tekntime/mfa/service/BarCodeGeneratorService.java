@@ -22,7 +22,7 @@ public class BarCodeGeneratorService {
 	    EAN13Bean barcodeGenerator = new EAN13Bean();
 	    BitmapCanvasProvider canvas = 
 	      new BitmapCanvasProvider(160, BufferedImage.TYPE_BYTE_BINARY, false, 0);
-
+	    LOGGER.info("generating ....");
 	    barcodeGenerator.generateBarcode(canvas, barcodeText);
 	    return canvas.getBufferedImage();
 	}
@@ -33,7 +33,7 @@ public class BarCodeGeneratorService {
 	    QRCodeWriter barcodeWriter = new QRCodeWriter();
 	    BitMatrix bitMatrix = 
 	      barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
-
+	    LOGGER.info("generating QR code ....");
 	    return MatrixToImageWriter.toBufferedImage(bitMatrix);
 	}
 
