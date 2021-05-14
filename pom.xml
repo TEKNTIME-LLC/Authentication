@@ -33,6 +33,7 @@
     <module>com.tekntime.proxy</module>
     <module>com.tekntime.basic.proxy</module>
     <module>micro.account.management</module>
+    <module>com.tekntime.block.chain</module>
   </modules>
   
   <dependencies>
